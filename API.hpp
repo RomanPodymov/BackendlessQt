@@ -8,6 +8,7 @@
 
 #include <QString>
 #include <QMap>
+#include <QNetworkAccessManager>
 
 struct BackendlessUser {
     QString email;
@@ -21,4 +22,7 @@ public:
 
 private:
     void request(QString, QMap<QString, QString>);
+
+private:
+    QNetworkAccessManager networkAccessManager;
 };

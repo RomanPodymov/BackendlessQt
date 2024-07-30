@@ -10,6 +10,7 @@
 #include <QNetworkAccessManager>
 #include <QUrlQuery>
 #include <QNetworkRequest>
+#include <QNetworkReply>
 
 void API::registerUser(QString appId, QString key, BackendlessUser user) {
     request(
@@ -23,8 +24,6 @@ void API::registerUser(QString appId, QString key, BackendlessUser user) {
 }
 
 void API::request(QString urlString, QMap<QString, QString> customParams) {
-    QNetworkAccessManager* networkAccessManager = new QNetworkAccessManager();
-
     QUrl url(urlString);
     QNetworkRequest request(url);
 
@@ -36,11 +35,11 @@ void API::request(QString urlString, QMap<QString, QString> customParams) {
         params.addQueryItem(key, value);
     }
 
-    QObject::connect(networkAccessManager, &QNetworkAccessManager::finished, [=](QNetworkReply* reply){
+    QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, [=](QNetworkReply* reply){
         auto replyValue = reply->readAll();
         qDebug() << "Method called";
         qDebug() << replyValue;
     });
 
-    networkAccessManager->post(request, params.query().toUtf8());
+    networkAccessManager.post(request, params.query().toUtf8());
 }
