@@ -29,16 +29,26 @@ void API::request(QString urlString, QMap<QString, QString> customParams) {
 
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-    QUrlQuery params;
+    QString params = "{";
 
     for (auto [key, value] : customParams.asKeyValueRange()) {
-        params.addQueryItem(key, value);
+        params += "\"";
+        params += key;
+        params += "\"";
+        params += ":";
+        params += "\"";
+        params += value;
+        params += "\"";
+        params += ",";
     }
+
+    params.removeLast();
+    params += "}";
 
     QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, [=](QNetworkReply* reply){
         auto replyValue = reply->readAll();
         qDebug() << replyValue;
     });
 
-    networkAccessManager.post(request, params.query().toUtf8());
+    networkAccessManager.post(request, params.toUtf8());
 }
