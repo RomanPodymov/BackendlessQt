@@ -16,6 +16,6 @@ add_library(Some STATIC
   API.hpp
 )
 
-target_link_libraries(Some PRIVATE Qt${QT_VERSION_MAJOR}::Core)
+target_link_libraries(Some PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network)
 
 target_compile_definitions(Some PRIVATE SOME_LIBRARY)
