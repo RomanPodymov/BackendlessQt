@@ -1,4 +1,4 @@
-CONFIG += c++20 warn_on staticlib
+CONFIG += c++17 warn_on staticlib
 
 QT += core network
 
