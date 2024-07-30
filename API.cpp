@@ -14,20 +14,20 @@
 
 void API::registerUser(QString appId, QString key, BackendlessUser user) {
     request(
-        "https://api.backendless.com/" + appId + "/" + key + "/users/register",
+        "https://eu-api.backendless.com/" + appId + "/" + key + "/users/register",
         {
-         {"email", user.email},
-         {"name", user.name},
-         {"password", user.password}
+            {"email", user.email},
+            {"name", user.name},
+            {"password", user.password}
         }
-    );
+        );
 }
 
 void API::request(QString urlString, QMap<QString, QString> customParams) {
     QUrl url(urlString);
     QNetworkRequest request(url);
 
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
     QUrlQuery params;
 
@@ -37,7 +37,6 @@ void API::request(QString urlString, QMap<QString, QString> customParams) {
 
     QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, [=](QNetworkReply* reply){
         auto replyValue = reply->readAll();
-        qDebug() << "Method called";
         qDebug() << replyValue;
     });
 
