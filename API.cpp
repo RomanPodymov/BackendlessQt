@@ -37,7 +37,9 @@ void API::request(QString urlString, QMap<QString, QString> customParams) {
     }
 
     QObject::connect(networkAccessManager, &QNetworkAccessManager::finished, [=](QNetworkReply* reply){
-
+        auto replyValue = reply->readAll();
+        qDebug() << "Method called";
+        qDebug() << replyValue;
     });
 
     networkAccessManager->post(request, params.query().toUtf8());
