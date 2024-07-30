@@ -1,0 +1,25 @@
+name: CI
+ 
+on: push
+jobs:
+  build_and_test:
+    name: "Build and test"
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Install dependencies (linux)
+      run: sudo apt install ninja-build
+      if: matrix.os == 'ubuntu-latest'
+    - name: Install Ninja (windows)
+      run: choco install ninja
+      if: matrix.os == 'windows-latest'
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: '6.5.2'
+    - uses: ilammy/msvc-dev-cmd@v1
+    - uses: actions/checkout@v3
+    - name: Build
+      run: cmake -S . -B build -G "Ninja Multi-Config" && cmake --build build --config Debug
