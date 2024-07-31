@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(Some LANGUAGES CXX)
+project(BackendlessQt LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -18,4 +18,4 @@ add_library(Some STATIC
 
 target_link_libraries(Some PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network)
 
-target_compile_definitions(Some PRIVATE SOME_LIBRARY)
+target_compile_definitions(Some PRIVATE BACKENDLESS_QT_LIBRARY)
