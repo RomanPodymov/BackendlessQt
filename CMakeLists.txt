@@ -11,11 +11,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Network)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network)
 
-add_library(Some STATIC
+add_library(BackendlessQt STATIC
   API.cpp
   API.hpp
 )
 
-target_link_libraries(Some PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network)
+target_link_libraries(BackendlessQt PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network)
 
-target_compile_definitions(Some PRIVATE BACKENDLESS_QT_LIBRARY)
+target_compile_definitions(BackendlessQt PRIVATE BACKENDLESS_QT_LIBRARY)
