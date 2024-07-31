@@ -12,18 +12,18 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
-void API::registerUser(QString appId, QString key, BackendlessUser user) {
-    request(
+QFuture<Void> API::registerUser(QString appId, QString key, BackendlessUser user) {
+    return request(
         "https://eu-api.backendless.com/" + appId + "/" + key + "/users/register",
         {
             {"email", user.email},
             {"name", user.name},
             {"password", user.password}
         }
-        );
+    );
 }
 
-void API::request(QString urlString, QMap<QString, QString> customParams) {
+QFuture<Void> API::request(QString urlString, QMap<QString, QString> customParams) {
     QUrl url(urlString);
     QNetworkRequest request(url);
 
@@ -45,10 +45,12 @@ void API::request(QString urlString, QMap<QString, QString> customParams) {
     params.removeLast();
     params += "}";
 
+    return QtConcurrent::run() {
     QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, [=](QNetworkReply* reply){
         auto replyValue = reply->readAll();
         qDebug() << replyValue;
     });
 
     networkAccessManager.post(request, params.toUtf8());
+    }
 }

@@ -18,10 +18,10 @@ struct BackendlessUser {
 
 class API {
 public:
-    void registerUser(QString, QString, BackendlessUser);
+    QFuture<Void> registerUser(QString, QString, BackendlessUser);
 
 private:
-    void request(QString, QMap<QString, QString>);
+    QFuture<Void> request(QString, QMap<QString, QString>);
 
 private:
     QNetworkAccessManager networkAccessManager;
