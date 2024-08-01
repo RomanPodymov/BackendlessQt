@@ -9,6 +9,7 @@
 #include <QString>
 #include <QMap>
 #include <QNetworkAccessManager>
+#include <QFuture>
 
 struct BackendlessUser {
     QString email;
