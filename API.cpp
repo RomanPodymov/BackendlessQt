@@ -11,11 +11,8 @@
 #include <QUrlQuery>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-#include <QPromise>
-#include <QScopedPointer>
-#include <QThread>
 
-QFuture<QString> API::registerUser(QString appId, QString key, BackendlessUser user) {
+void API::registerUser(QString appId, QString key, BackendlessUser user) {
     return request(
         "https://eu-api.backendless.com/" + appId + "/" + key + "/users/register",
         {
@@ -26,7 +23,7 @@ QFuture<QString> API::registerUser(QString appId, QString key, BackendlessUser u
     );
 }
 
-QFuture<QString> API::request(QString urlString, QMap<QString, QString> customParams) {
+void API::request(QString urlString, QMap<QString, QString> customParams) {
     QUrl url(urlString);
     QNetworkRequest request(url);
 
@@ -48,21 +45,10 @@ QFuture<QString> API::request(QString urlString, QMap<QString, QString> customPa
     params.removeLast();
     params += "}";
 
-    QPromise<QString> promise;
-    QFuture<QString> future = promise.future();
-
-    QScopedPointer<QThread> thread(QThread::create([] (QPromise<QString> promise) {
-        promise.start();
-        QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, [=](QNetworkReply* reply){
-            auto replyValue = reply->readAll();
-            qDebug() << replyValue;
-            promise.addResult(replyValue);
-            promise.finish();
-        });
-    }, std::move(promise)));
-    thread->start();
-
+    QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, [&](QNetworkReply* reply) {
+        auto replyValue = reply->readAll();
+        qDebug() << replyValue;
+        emit userRegistered();
+    });
     networkAccessManager.post(request, params.toUtf8());
-
-    return future;
 }

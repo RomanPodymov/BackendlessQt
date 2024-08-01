@@ -9,7 +9,6 @@
 #include <QString>
 #include <QMap>
 #include <QNetworkAccessManager>
-#include <QFuture>
 
 struct BackendlessUser {
     QString email;
@@ -17,12 +16,17 @@ struct BackendlessUser {
     QString password;
 };
 
-class API {
+class API: public QObject {
+    Q_OBJECT
+
 public:
-    QFuture<QString> registerUser(QString, QString, BackendlessUser);
+    void registerUser(QString, QString, BackendlessUser);
+
+signals:
+    void userRegistered();
 
 private:
-    QFuture<QString> request(QString, QMap<QString, QString>);
+    void request(QString, QMap<QString, QString>);
 
 private:
     QNetworkAccessManager networkAccessManager;
