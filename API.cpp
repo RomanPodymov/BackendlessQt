@@ -11,6 +11,8 @@
 #include <QUrlQuery>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 void API::registerUser(QString appId, QString key, BackendlessUser user) {
     return request(
@@ -19,11 +21,29 @@ void API::registerUser(QString appId, QString key, BackendlessUser user) {
             {"email", user.email},
             {"name", user.name},
             {"password", user.password}
+        }, [&](QNetworkReply*){
+            emit userRegistered();
         }
     );
 }
 
-void API::request(QString urlString, QMap<QString, QString> customParams) {
+void API::signInUser(QString appId, QString key, QString login, QString password) {
+    return request(
+        "https://eu-api.backendless.com/" + appId + "/" + key + "/users/login",
+        {
+            {"login", login},
+            {"password", password}
+        }, [&](QNetworkReply* reply){
+            QJsonDocument jsonResponse = QJsonDocument::fromJson(reply->readAll());
+            QJsonObject jsonObject = jsonResponse.object();
+            QString token = jsonObject["user-token"].toString();
+            qDebug() << token;
+            emit userSignedIn(token);
+        }
+    );
+}
+
+void API::request(QString urlString, QMap<QString, QString> customParams, std::function<void(QNetworkReply*)> handleRequest) {
     QUrl url(urlString);
     QNetworkRequest request(url);
 
@@ -45,10 +65,10 @@ void API::request(QString urlString, QMap<QString, QString> customParams) {
     params.removeLast();
     params += "}";
 
-    QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, [&](QNetworkReply* reply) {
+    QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, [handleRequest](QNetworkReply* reply) {
         auto replyValue = reply->readAll();
         qDebug() << replyValue;
-        emit userRegistered();
+        handleRequest(reply);
     });
     networkAccessManager.post(request, params.toUtf8());
 }
