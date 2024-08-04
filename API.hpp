@@ -20,7 +20,7 @@ class API: public QObject {
     Q_OBJECT
 
 public:
-    API(QString, QString, QString);
+    API(QString _appId, QString _apiKey, QString _endpoint = "https://eu-api.backendless.com/");
     void registerUser(BackendlessUser);
     void signInUser(QString, QString);
 
@@ -29,7 +29,7 @@ signals:
     void userSignedIn(QString);
 
 private:
-    void request(QString, QMap<QString, QString>, std::function<void(QNetworkReply*)>);
+    void request(QString, QMap<QString, QString>, std::function<void(QNetworkReply*)> const&);
 
 private:
     QString appId;

@@ -14,7 +14,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-API::API(QString _appId, QString _apiKey, QString _endpoint = "https://eu-api.backendless.com/"): QObject(), appId(_appId), apiKey(_apiKey), endpoint(_endpoint) {
+API::API(QString _appId, QString _apiKey, QString _endpoint): QObject(), appId(_appId), apiKey(_apiKey), endpoint(_endpoint) {
 
 }
 
@@ -25,7 +25,7 @@ void API::registerUser(BackendlessUser user) {
             {"email", user.email},
             {"name", user.name},
             {"password", user.password}
-        }, [&](QNetworkReply*){
+        }, [=](QNetworkReply*){
             emit userRegistered();
         }
     );
@@ -37,8 +37,11 @@ void API::signInUser(QString login, QString password) {
         {
             {"login", login},
             {"password", password}
-        }, [&](QNetworkReply* reply){
-            QJsonDocument jsonResponse = QJsonDocument::fromJson(reply->readAll());
+        }, [=](QNetworkReply* reply){
+            auto replyValue = reply->readAll();
+            qDebug() << replyValue;
+            QJsonParseError jsonError;
+            QJsonDocument jsonResponse = QJsonDocument::fromJson(replyValue, &jsonError);
             QJsonObject jsonObject = jsonResponse.object();
             QString token = jsonObject["user-token"].toString();
             qDebug() << token;
@@ -47,7 +50,7 @@ void API::signInUser(QString login, QString password) {
     );
 }
 
-void API::request(QString urlString, QMap<QString, QString> customParams, std::function<void(QNetworkReply*)> handleRequest) {
+void API::request(QString urlString, QMap<QString, QString> customParams, std::function<void(QNetworkReply*)> const& handleRequest) {
     QUrl url(urlString);
     QNetworkRequest request(url);
 
@@ -70,8 +73,6 @@ void API::request(QString urlString, QMap<QString, QString> customParams, std::f
     params += "}";
 
     QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, [handleRequest](QNetworkReply* reply) {
-        auto replyValue = reply->readAll();
-        qDebug() << replyValue;
         handleRequest(reply);
     });
     networkAccessManager.post(request, params.toUtf8());
