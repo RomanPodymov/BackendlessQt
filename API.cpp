@@ -14,9 +14,13 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-void API::registerUser(QString appId, QString key, BackendlessUser user) {
+API::API(QString _appId, QString _apiKey, QString _endpoint = "https://eu-api.backendless.com/"): QObject(), appId(_appId), apiKey(_apiKey), endpoint(_endpoint) {
+
+}
+
+void API::registerUser(BackendlessUser user) {
     return request(
-        "https://eu-api.backendless.com/" + appId + "/" + key + "/users/register",
+        endpoint + appId + "/" + apiKey + "/users/register",
         {
             {"email", user.email},
             {"name", user.name},
@@ -27,9 +31,9 @@ void API::registerUser(QString appId, QString key, BackendlessUser user) {
     );
 }
 
-void API::signInUser(QString appId, QString key, QString login, QString password) {
+void API::signInUser(QString login, QString password) {
     return request(
-        "https://eu-api.backendless.com/" + appId + "/" + key + "/users/login",
+        endpoint + appId + "/" + apiKey + "/users/login",
         {
             {"login", login},
             {"password", password}

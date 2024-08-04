@@ -20,8 +20,9 @@ class API: public QObject {
     Q_OBJECT
 
 public:
-    void registerUser(QString, QString, BackendlessUser);
-    void signInUser(QString, QString, QString, QString);
+    API(QString, QString, QString);
+    void registerUser(BackendlessUser);
+    void signInUser(QString, QString);
 
 signals:
     void userRegistered();
@@ -31,5 +32,8 @@ private:
     void request(QString, QMap<QString, QString>, std::function<void(QNetworkReply*)>);
 
 private:
+    QString appId;
+    QString apiKey;
+    QString endpoint;
     QNetworkAccessManager networkAccessManager;
 };
