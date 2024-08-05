@@ -72,7 +72,9 @@ void API::request(QString urlString, QMap<QString, QString> customParams, std::f
     params.removeLast();
     params += "}";
 
-    QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, [handleRequest](QNetworkReply* reply) {
+    QObject *context = new QObject(this);
+    QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, context, [context, handleRequest](QNetworkReply* reply) {
+        delete context;
         handleRequest(reply);
     });
     networkAccessManager.post(request, params.toUtf8());

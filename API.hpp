@@ -14,6 +14,14 @@ struct BackendlessUser {
     QString email;
     QString name;
     QString password;
+
+    BackendlessUser(
+        QString _email,
+        QString _name,
+        QString _password
+    ): email(_email), name(_name), password(_password) {
+
+    }
 };
 
 class API: public QObject {
