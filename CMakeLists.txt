@@ -17,7 +17,7 @@ add_library(BackendlessQt STATIC
   API.cpp
   API.hpp
 )
-add_executable(BackendlessQt test.cpp)
+add_executable(MyTest test.cpp)
 add_test(BackendlessQt MyTest)
 
 target_link_libraries(BackendlessQt PRIVATE 
