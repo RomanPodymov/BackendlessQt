@@ -7,4 +7,4 @@ private slots:
 };
 
 QTEST_MAIN(Foo)
-#include "foo.moc"
+#include "test.moc"
