@@ -18,7 +18,7 @@ add_library(BackendlessQt STATIC
   API.hpp
 )
 add_executable(BackendlessQt test.cpp)
-add_test(BackendlessQt BackendlessQt)
+add_test(BackendlessQt MyTest)
 
 target_link_libraries(BackendlessQt PRIVATE 
   Qt${QT_VERSION_MAJOR}::Core 
