@@ -25,7 +25,9 @@ void API::registerUser(BackendlessUser user) {
             {"email", user.email},
             {"name", user.name},
             {"password", user.password}
-        }, [=](QNetworkReply*){
+        }, true, [=](QNetworkReply* reply){
+            auto replyValue = reply->readAll();
+            qDebug() << replyValue;
             emit userRegistered();
         }
     );
@@ -37,20 +39,39 @@ void API::signInUser(QString login, QString password) {
         {
             {"login", login},
             {"password", password}
-        }, [=](QNetworkReply* reply){
+        }, true, [=](QNetworkReply* reply){
             auto replyValue = reply->readAll();
             qDebug() << replyValue;
             QJsonParseError jsonError;
             QJsonDocument jsonResponse = QJsonDocument::fromJson(replyValue, &jsonError);
             QJsonObject jsonObject = jsonResponse.object();
             QString token = jsonObject["user-token"].toString();
+            userToken = token;
             qDebug() << token;
             emit userSignedIn(token);
         }
     );
 }
 
-void API::request(QString urlString, QMap<QString, QString> customParams, std::function<void(QNetworkReply*)> const& handleRequest) {
+void API::loadTableItems(QString tableName) {
+    return request(
+        endpoint + appId + "/" + apiKey + "/data/" + tableName,
+        {
+
+        }, false, [=](QNetworkReply* reply){
+            auto replyValue = reply->readAll();
+            qDebug() << replyValue;
+            emit tableItemsLoaded(replyValue);
+        }
+    );
+}
+
+void API::request(
+    QString urlString,
+    QMap<QString, QString> customParams,
+    bool isPost,
+    std::function<void(QNetworkReply*)> const& handleRequest
+) {
     QUrl url(urlString);
     QNetworkRequest request(url);
 
@@ -72,10 +93,12 @@ void API::request(QString urlString, QMap<QString, QString> customParams, std::f
     params.removeLast();
     params += "}";
 
-    QObject *context = new QObject(this);
-    QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, context, [context, handleRequest](QNetworkReply* reply) {
-        delete context;
+    QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, this, [handleRequest](QNetworkReply* reply) {
         handleRequest(reply);
-    });
-    networkAccessManager.post(request, params.toUtf8());
+    }, Qt::SingleShotConnection);
+    if (isPost) {
+        networkAccessManager.post(request, params.toUtf8());
+    } else {
+        networkAccessManager.get(request);
+    }
 }

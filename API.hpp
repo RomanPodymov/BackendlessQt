@@ -31,17 +31,20 @@ public:
     API(QString _appId, QString _apiKey, QString _endpoint = "https://eu-api.backendless.com/");
     void registerUser(BackendlessUser);
     void signInUser(QString, QString);
+    void loadTableItems(QString);
 
 signals:
     void userRegistered();
     void userSignedIn(QString);
+    void tableItemsLoaded(QString);
 
 private:
-    void request(QString, QMap<QString, QString>, std::function<void(QNetworkReply*)> const&);
+    void request(QString, QMap<QString, QString>, bool, std::function<void(QNetworkReply*)> const&);
 
 private:
     QString appId;
     QString apiKey;
     QString endpoint;
+    QString userToken;
     QNetworkAccessManager networkAccessManager;
 };
