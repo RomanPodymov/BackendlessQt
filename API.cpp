@@ -53,6 +53,17 @@ void API::signInUser(QString login, QString password) {
     );
 }
 
+void API::addItemToTable(QString tableName, QMap<QString, QString> params) {
+    return request(
+        endpoint + appId + "/" + apiKey + "/data/" + tableName,
+        params, true, [=](QNetworkReply* reply){
+            auto replyValue = reply->readAll();
+            qDebug() << replyValue;
+            emit itemAdded();
+        }
+    );
+}
+
 void API::loadTableItems(QString tableName) {
     return request(
         endpoint + appId + "/" + apiKey + "/data/" + tableName,
