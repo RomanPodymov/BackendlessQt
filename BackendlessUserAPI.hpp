@@ -9,7 +9,7 @@
 #include <QString>
 #include <QMap>
 #include <QNetworkAccessManager>
-#include "BackendlessQt/BackendlessUser.hpp"
+#include "BackendlessUser.hpp"
 
 class BackendlessUserAPI: public QObject {
     Q_OBJECT
@@ -29,9 +29,9 @@ private:
     void request(QString, QMap<QString, QString>, bool, std::function<void(QNetworkReply*)> const&);
 
 private:
+    QNetworkAccessManager& networkAccessManager;
     QString appId;
     QString apiKey;
     QString endpoint;
     QString userToken;
-    QNetworkAccessManager& networkAccessManager;
 };

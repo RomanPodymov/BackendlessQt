@@ -12,7 +12,7 @@
 #include <QNetworkReply>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include "BackendlessQt/BackendlessAPI.hpp"
+#include "BackendlessAPI.hpp"
 
 BackendlessAPI::BackendlessAPI(QString _appId, QString _apiKey, QString _endpoint): QObject(),
     userAPI(networkAccessManager, _appId, _apiKey, _endpoint),

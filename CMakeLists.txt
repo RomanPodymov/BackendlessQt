@@ -12,8 +12,11 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Network)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network)
 
 add_library(BackendlessQt STATIC
-  API.cpp
-  API.hpp
+    BackendlessAPI.cpp
+    BackendlessUserAPI.cpp
+    BackendlessAPI.hpp
+    BackendlessUserAPI.hpp
+    BackendlessUser.hpp
 )
 
 target_link_libraries(BackendlessQt PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network)
