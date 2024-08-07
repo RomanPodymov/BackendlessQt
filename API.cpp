@@ -14,11 +14,23 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-API::API(QString _appId, QString _apiKey, QString _endpoint): QObject(), appId(_appId), apiKey(_apiKey), endpoint(_endpoint) {
+BackendlessAPI::BackendlessAPI(QString _appId, QString _apiKey, QString _endpoint): QObject(),
+    userAPI(networkAccessManager, _appId, _apiKey, _endpoint),
+    appId(_appId),
+    apiKey(_apiKey),
+    endpoint(_endpoint) {
 
 }
 
-void API::registerUser(BackendlessUser user) {
+BackendlessUserAPI::BackendlessUserAPI(QNetworkAccessManager& _networkAccessManager, QString _appId, QString _apiKey, QString _endpoint): QObject(),
+    networkAccessManager(_networkAccessManager),
+    appId(_appId),
+    apiKey(_apiKey),
+    endpoint(_endpoint) {
+
+}
+
+void BackendlessUserAPI::registerUser(BackendlessUser user) {
     return request(
         endpoint + appId + "/" + apiKey + "/users/register",
         {
@@ -33,7 +45,7 @@ void API::registerUser(BackendlessUser user) {
     );
 }
 
-void API::signInUser(QString login, QString password) {
+void BackendlessUserAPI::signInUser(QString login, QString password) {
     return request(
         endpoint + appId + "/" + apiKey + "/users/login",
         {
@@ -52,7 +64,7 @@ void API::signInUser(QString login, QString password) {
     );
 }
 
-void API::validateUserToken() {
+void BackendlessUserAPI::validateUserToken() {
     return request(
         endpoint + appId + "/" + apiKey + "/users/isvalidusertoken/" + userToken,
         {
@@ -64,7 +76,7 @@ void API::validateUserToken() {
     );
 }
 
-void API::addItemToTable(QString tableName, QMap<QString, QString> params) {
+void BackendlessAPI::addItemToTable(QString tableName, QMap<QString, QString> params) {
     return request(
         endpoint + appId + "/" + apiKey + "/data/" + tableName,
         params, true, [=](QNetworkReply* reply){
@@ -75,7 +87,7 @@ void API::addItemToTable(QString tableName, QMap<QString, QString> params) {
     );
 }
 
-void API::loadTableItems(QString tableName) {
+void BackendlessAPI::loadTableItems(QString tableName) {
     return request(
         endpoint + appId + "/" + apiKey + "/data/" + tableName,
         {
@@ -88,7 +100,7 @@ void API::loadTableItems(QString tableName) {
     );
 }
 
-void API::request(
+void BackendlessAPI::request(
     QString urlString,
     QMap<QString, QString> customParams,
     bool isPost,
@@ -118,6 +130,43 @@ void API::request(
     QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, this, [handleRequest](QNetworkReply* reply) {
         handleRequest(reply);
     }, Qt::SingleShotConnection);
+    if (isPost) {
+        networkAccessManager.post(request, params.toUtf8());
+    } else {
+        networkAccessManager.get(request);
+    }
+}
+
+void BackendlessUserAPI::request(
+    QString urlString,
+    QMap<QString, QString> customParams,
+    bool isPost,
+    std::function<void(QNetworkReply*)> const& handleRequest
+    ) {
+    QUrl url(urlString);
+    QNetworkRequest request(url);
+
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    QString params = "{";
+
+    for (auto [key, value] : customParams.asKeyValueRange()) {
+        params += "\"";
+        params += key;
+        params += "\"";
+        params += ":";
+        params += "\"";
+        params += value;
+        params += "\"";
+        params += ",";
+    }
+
+    params.removeLast();
+    params += "}";
+
+    QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, this, [handleRequest](QNetworkReply* reply) {
+            handleRequest(reply);
+        }, Qt::SingleShotConnection);
     if (isPost) {
         networkAccessManager.post(request, params.toUtf8());
     } else {
