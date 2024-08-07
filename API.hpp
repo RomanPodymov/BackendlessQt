@@ -31,12 +31,14 @@ public:
     API(QString _appId, QString _apiKey, QString _endpoint = "https://eu-api.backendless.com/");
     void registerUser(BackendlessUser);
     void signInUser(QString, QString);
+    void validateUserToken();
     void addItemToTable(QString, QMap<QString, QString>);
     void loadTableItems(QString);
 
 signals:
     void userRegistered();
-    void userSignedIn(QString);
+    void userSignedIn();
+    void userTokenValidated(bool);
     void itemAdded();
     void tableItemsLoaded(QString);
 

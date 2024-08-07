@@ -47,8 +47,19 @@ void API::signInUser(QString login, QString password) {
             QJsonObject jsonObject = jsonResponse.object();
             QString token = jsonObject["user-token"].toString();
             userToken = token;
-            qDebug() << token;
-            emit userSignedIn(token);
+            emit userSignedIn();
+        }
+    );
+}
+
+void API::validateUserToken() {
+    return request(
+        endpoint + appId + "/" + apiKey + "/users/isvalidusertoken/" + userToken,
+        {
+
+        }, false, [=](QNetworkReply* reply){
+            auto replyValue = reply->readAll();
+            emit userTokenValidated(replyValue == "true");
         }
     );
 }
