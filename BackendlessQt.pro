@@ -1,11 +1,14 @@
-CONFIG += c++17 warn_on staticlib
+CONFIG += c++20 warn_on staticlib
 
 QT += core network
 
 TEMPLATE = lib
 
 SOURCES += \
-    API.cpp
+    BackendlessAPI.cpp \
+    BackendlessUserAPI.cpp
 
 HEADERS += \
-    API.hpp
+    BackendlessAPI.hpp \
+    BackendlessUserAPI.hpp \
+    BackendlessUser.hpp

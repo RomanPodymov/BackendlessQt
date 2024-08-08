@@ -15,8 +15,8 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Network Test)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network Test)
 
 add_library(BackendlessQt STATIC
-  API.cpp
-  API.hpp
+    BackendlessAPI.cpp
+    BackendlessAPI.hpp
 )
 add_executable(MyTest test.cpp)
 add_test(BackendlessQt MyTest)
