@@ -9,7 +9,6 @@
 #include <QString>
 #include <QMap>
 #include <QNetworkAccessManager>
-#include <QSharedPointer>
 #include "BackendlessUserAPI.hpp"
 
 class BackendlessAPI: public QObject {
