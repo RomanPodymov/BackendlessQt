@@ -73,12 +73,12 @@ void BackendlessAPI::request(
     params.removeLast();
     params += "}";
 
-    QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, this, [handleRequest](QNetworkReply* reply) {
+    /*QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, this, [handleRequest](QNetworkReply* reply) {
         handleRequest(reply);
     }, Qt::SingleShotConnection);
     if (isPost) {
         networkAccessManager.post(request, params.toUtf8());
     } else {
         networkAccessManager.get(request);
-    }
+    }*/
 }
