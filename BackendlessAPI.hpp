@@ -27,12 +27,12 @@ signals:
 private:
     void request(QString, QMap<QString, QString>, bool, std::function<void(QNetworkReply*)> const&);
 
+public:
+    BackendlessUserAPI userAPI;
+
 private:
-    //QNetworkAccessManager networkAccessManager;
+    QNetworkAccessManager networkAccessManager;
     QString appId;
     QString apiKey;
     QString endpoint;
-
-public:
-    // BackendlessUserAPI userAPI;
 };

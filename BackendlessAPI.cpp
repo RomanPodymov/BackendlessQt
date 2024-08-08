@@ -15,7 +15,7 @@
 #include "BackendlessAPI.hpp"
 
 BackendlessAPI::BackendlessAPI(QString _appId, QString _apiKey, QString _endpoint): QObject(),
-    //userAPI(networkAccessManager, _appId, _apiKey, _endpoint),
+    userAPI(&networkAccessManager, _appId, _apiKey, _endpoint),
     appId(_appId),
     apiKey(_apiKey),
     endpoint(_endpoint) {
@@ -73,12 +73,12 @@ void BackendlessAPI::request(
     params.removeLast();
     params += "}";
 
-    /*QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, this, [handleRequest](QNetworkReply* reply) {
+    QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, this, [handleRequest](QNetworkReply* reply) {
         handleRequest(reply);
     }, Qt::SingleShotConnection);
     if (isPost) {
         networkAccessManager.post(request, params.toUtf8());
     } else {
         networkAccessManager.get(request);
-    }*/
+    }
 }
