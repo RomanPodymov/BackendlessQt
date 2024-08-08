@@ -27,7 +27,7 @@ private:
     void request(QString, QMap<QString, QString>, bool, std::function<void(QNetworkReply*)> const&);
 
 public:
-    BackendlessUserAPI userAPI;
+    //BackendlessUserAPI userAPI;
 
 private:
     QString appId;
