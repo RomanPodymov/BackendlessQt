@@ -30,8 +30,8 @@ public:
     BackendlessUserAPI userAPI;
 
 private:
+    QNetworkAccessManager networkAccessManager;
     QString appId;
     QString apiKey;
     QString endpoint;
-    QNetworkAccessManager networkAccessManager;
 };
