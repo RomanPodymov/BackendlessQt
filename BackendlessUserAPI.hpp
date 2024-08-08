@@ -10,7 +10,6 @@
 #include <QMap>
 #include <QNetworkAccessManager>
 #include "BackendlessUser.hpp"
-#include <QWeakPointer>
 
 class BackendlessUserAPI: public QObject {
     Q_OBJECT
