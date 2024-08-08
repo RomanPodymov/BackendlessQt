@@ -10,7 +10,7 @@
 #include <QMap>
 #include <QNetworkAccessManager>
 #include <QSharedPointer>
-//#include "BackendlessUserAPI.hpp"
+#include "BackendlessUserAPI.hpp"
 
 class BackendlessAPI: public QObject {
     Q_OBJECT
@@ -28,11 +28,11 @@ private:
     void request(QString, QMap<QString, QString>, bool, std::function<void(QNetworkReply*)> const&);
 
 private:
-    //QSharedPointer<QNetworkAccessManager> networkAccessManager;
+    QNetworkAccessManager networkAccessManager;
     QString appId;
     QString apiKey;
     QString endpoint;
 
 public:
-    //BackendlessUserAPI userAPI;
+    BackendlessUserAPI userAPI;
 };
