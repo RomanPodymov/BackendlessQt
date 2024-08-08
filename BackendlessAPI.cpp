@@ -30,7 +30,7 @@ void BackendlessAPI::addItemToTable(QString tableName, QMap<QString, QString> pa
             qDebug() << replyValue;
             emit itemAdded();
         }
-        );
+    );
 }
 
 void BackendlessAPI::loadTableItems(QString tableName) {
@@ -43,7 +43,7 @@ void BackendlessAPI::loadTableItems(QString tableName) {
             qDebug() << replyValue;
             emit tableItemsLoaded(replyValue);
         }
-        );
+    );
 }
 
 void BackendlessAPI::request(
@@ -51,7 +51,7 @@ void BackendlessAPI::request(
     QMap<QString, QString> customParams,
     bool isPost,
     std::function<void(QNetworkReply*)> const& handleRequest
-    ) {
+) {
     QUrl url(urlString);
     QNetworkRequest request(url);
 

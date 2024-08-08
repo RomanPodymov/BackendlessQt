@@ -31,10 +31,10 @@ void BackendlessUserAPI::registerUser(BackendlessUser user) {
             {"password", user.password}
         }, true, [=](QNetworkReply* reply){
             auto replyValue = reply->readAll();
-            qDebug() << replyValue;
+            qDebug() << replyValue;           
             emit userRegistered();
         }
-        );
+    );
 }
 
 void BackendlessUserAPI::signInUser(QString login, QString password) {
@@ -46,14 +46,16 @@ void BackendlessUserAPI::signInUser(QString login, QString password) {
         }, true, [=](QNetworkReply* reply){
             auto replyValue = reply->readAll();
             qDebug() << replyValue;
-            QJsonParseError jsonError;
-            QJsonDocument jsonResponse = QJsonDocument::fromJson(replyValue, &jsonError);
-            QJsonObject jsonObject = jsonResponse.object();
-            QString token = jsonObject["user-token"].toString();
-            userToken = token;
-            emit userSignedIn();
+
+            auto errorCode = extractError(replyValue);
+            if (errorCode != 0) {
+                emit userSignInError(BackendlessError::invalidLoginOrPassword);
+            } else {
+                userToken = extractToken(replyValue);
+                emit userSignedIn();
+            }
         }
-        );
+    );
 }
 
 void BackendlessUserAPI::validateUserToken() {
@@ -65,7 +67,21 @@ void BackendlessUserAPI::validateUserToken() {
             auto replyValue = reply->readAll();
             emit userTokenValidated(replyValue == "true");
         }
-        );
+    );
+}
+
+int BackendlessUserAPI::extractError(QByteArray replyValue) {
+    QJsonParseError jsonError;
+    QJsonDocument jsonResponse = QJsonDocument::fromJson(replyValue, &jsonError);
+    QJsonObject jsonObject = jsonResponse.object();
+    return jsonObject["code"].toInt();
+}
+
+QString BackendlessUserAPI::extractToken(QByteArray replyValue) {
+    QJsonParseError jsonError;
+    QJsonDocument jsonResponse = QJsonDocument::fromJson(replyValue, &jsonError);
+    QJsonObject jsonObject = jsonResponse.object();
+    return jsonObject["user-token"].toString();
 }
 
 void BackendlessUserAPI::request(
@@ -73,7 +89,7 @@ void BackendlessUserAPI::request(
     QMap<QString, QString> customParams,
     bool isPost,
     std::function<void(QNetworkReply*)> const& handleRequest
-    ) {
+) {
     QUrl url(urlString);
     QNetworkRequest request(url);
 
