@@ -22,7 +22,7 @@ BackendlessUserAPI::BackendlessUserAPI(QNetworkAccessManager* _networkAccessMana
 
 }
 
-void BackendlessUserAPI::registerUser(BackendlessUser user) {
+void BackendlessUserAPI::registerUser(BackendlessRegisterUser user) {
     return request(
         endpoint + appId + "/" + apiKey + "/users/register",
         {
@@ -49,10 +49,10 @@ void BackendlessUserAPI::signInUser(QString login, QString password) {
 
             auto errorCode = extractError(replyValue);
             if (errorCode != 0) {
-                emit userSignInError(BackendlessError::invalidLoginOrPassword);
+                emit signInUserResult(BackendlessError::invalidLoginOrPassword);
             } else {
                 userToken = extractToken(replyValue);
-                emit userSignedIn();
+                emit signInUserResult(BackendlessSignInUser(userToken));
             }
         }
     );

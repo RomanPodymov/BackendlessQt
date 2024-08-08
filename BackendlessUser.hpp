@@ -8,16 +8,22 @@
 
 #include <QString>
 
-struct BackendlessUser {
+struct BackendlessRegisterUser {
     QString email;
     QString name;
     QString password;
 
-    BackendlessUser(
+    BackendlessRegisterUser(
         QString _email,
         QString _name,
         QString _password
-    ): email(_email), name(_name), password(_password) {
+        ): email(_email), name(_name), password(_password) { }
+};
 
-    }
+struct BackendlessSignInUser {
+    QString userToken;
+
+    BackendlessSignInUser(
+        QString _userToken
+        ): userToken(_userToken) { }
 };

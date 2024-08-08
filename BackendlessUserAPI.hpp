@@ -20,14 +20,14 @@ class BackendlessUserAPI: public QObject {
 
 public:
     BackendlessUserAPI(QNetworkAccessManager*, QString _appId, QString _apiKey, QString _endpoint = "https://eu-api.backendless.com/");
-    void registerUser(BackendlessUser);
+
+    void registerUser(BackendlessRegisterUser);
     void signInUser(QString, QString);
     void validateUserToken();
 
 signals:
     void userRegistered();
-    void userSignedIn();
-    void userSignInError(BackendlessError);
+    void signInUserResult(std::variant<BackendlessSignInUser, BackendlessError>);
     void userTokenValidated(bool);
 
 private:
