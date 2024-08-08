@@ -10,12 +10,13 @@
 #include <QMap>
 #include <QNetworkAccessManager>
 #include "BackendlessUser.hpp"
+#include <QWeakPointer>
 
 class BackendlessUserAPI: public QObject {
     Q_OBJECT
 
 public:
-    BackendlessUserAPI(QNetworkAccessManager&, QString _appId, QString _apiKey, QString _endpoint = "https://eu-api.backendless.com/");
+    BackendlessUserAPI(QSharedPointer<QNetworkAccessManager>, QString _appId, QString _apiKey, QString _endpoint = "https://eu-api.backendless.com/");
     void registerUser(BackendlessUser);
     void signInUser(QString, QString);
     void validateUserToken();
@@ -29,7 +30,7 @@ private:
     void request(QString, QMap<QString, QString>, bool, std::function<void(QNetworkReply*)> const&);
 
 private:
-    QNetworkAccessManager& networkAccessManager;
+    //QWeakPointer<QNetworkAccessManager> networkAccessManager;
     QString appId;
     QString apiKey;
     QString endpoint;

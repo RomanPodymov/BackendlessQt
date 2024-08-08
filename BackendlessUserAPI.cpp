@@ -14,8 +14,8 @@
 #include <QJsonObject>
 #include "BackendlessUserAPI.hpp"
 
-BackendlessUserAPI::BackendlessUserAPI(QNetworkAccessManager& _networkAccessManager, QString _appId, QString _apiKey, QString _endpoint): QObject(),
-    networkAccessManager(_networkAccessManager),
+BackendlessUserAPI::BackendlessUserAPI(QSharedPointer<QNetworkAccessManager> _networkAccessManager, QString _appId, QString _apiKey, QString _endpoint): QObject(),
+    //networkAccessManager(_networkAccessManager),
     appId(_appId),
     apiKey(_apiKey),
     endpoint(_endpoint) {
@@ -34,7 +34,7 @@ void BackendlessUserAPI::registerUser(BackendlessUser user) {
             qDebug() << replyValue;
             emit userRegistered();
         }
-        );
+    );
 }
 
 void BackendlessUserAPI::signInUser(QString login, QString password) {
@@ -53,7 +53,7 @@ void BackendlessUserAPI::signInUser(QString login, QString password) {
             userToken = token;
             emit userSignedIn();
         }
-        );
+    );
 }
 
 void BackendlessUserAPI::validateUserToken() {
@@ -65,7 +65,7 @@ void BackendlessUserAPI::validateUserToken() {
             auto replyValue = reply->readAll();
             emit userTokenValidated(replyValue == "true");
         }
-        );
+    );
 }
 
 void BackendlessUserAPI::request(
@@ -95,12 +95,16 @@ void BackendlessUserAPI::request(
     params.removeLast();
     params += "}";
 
-    QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, this, [handleRequest](QNetworkReply* reply) {
-            handleRequest(reply);
-        }, Qt::SingleShotConnection);
+    /*QSharedPointer<QNetworkAccessManager> networkAccessManagerStrong = networkAccessManager.toStrongRef();
+    if (networkAccessManagerStrong.isNull())
+        return;
+
+    QObject::connect(networkAccessManagerStrong.get(), &QNetworkAccessManager::finished, this, [handleRequest](QNetworkReply* reply) {
+        handleRequest(reply);
+    }, Qt::SingleShotConnection);
     if (isPost) {
-        networkAccessManager.post(request, params.toUtf8());
+        networkAccessManagerStrong->post(request, params.toUtf8());
     } else {
-        networkAccessManager.get(request);
-    }
+        networkAccessManagerStrong->get(request);
+    }*/
 }

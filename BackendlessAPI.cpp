@@ -15,7 +15,8 @@
 #include "BackendlessAPI.hpp"
 
 BackendlessAPI::BackendlessAPI(QString _appId, QString _apiKey, QString _endpoint): QObject(),
-    userAPI(networkAccessManager, _appId, _apiKey, _endpoint),
+    //networkAccessManager(new QNetworkAccessManager()),
+    //userAPI(networkAccessManager, _appId, _apiKey, _endpoint),
     appId(_appId),
     apiKey(_apiKey),
     endpoint(_endpoint) {
@@ -30,7 +31,7 @@ void BackendlessAPI::addItemToTable(QString tableName, QMap<QString, QString> pa
             qDebug() << replyValue;
             emit itemAdded();
         }
-        );
+    );
 }
 
 void BackendlessAPI::loadTableItems(QString tableName) {
@@ -43,7 +44,7 @@ void BackendlessAPI::loadTableItems(QString tableName) {
             qDebug() << replyValue;
             emit tableItemsLoaded(replyValue);
         }
-        );
+    );
 }
 
 void BackendlessAPI::request(
@@ -51,7 +52,7 @@ void BackendlessAPI::request(
     QMap<QString, QString> customParams,
     bool isPost,
     std::function<void(QNetworkReply*)> const& handleRequest
-    ) {
+ ) {
     QUrl url(urlString);
     QNetworkRequest request(url);
 
@@ -73,12 +74,12 @@ void BackendlessAPI::request(
     params.removeLast();
     params += "}";
 
-    QObject::connect(&networkAccessManager, &QNetworkAccessManager::finished, this, [handleRequest](QNetworkReply* reply) {
-            handleRequest(reply);
-        }, Qt::SingleShotConnection);
+    /*QObject::connect(networkAccessManager, &QNetworkAccessManager::finished, this, [handleRequest](QNetworkReply* reply) {
+        handleRequest(reply);
+    }, Qt::SingleShotConnection);
     if (isPost) {
         networkAccessManager.post(request, params.toUtf8());
     } else {
         networkAccessManager.get(request);
-    }
+    }*/
 }
