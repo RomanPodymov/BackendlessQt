@@ -15,7 +15,7 @@
 #include "BackendlessAPI.hpp"
 
 BackendlessAPI::BackendlessAPI(QString _appId, QString _apiKey, QString _endpoint): QObject(),
-    userAPI(/*networkAccessManager,*/ _appId, _apiKey, _endpoint),
+    //userAPI(networkAccessManager, _appId, _apiKey, _endpoint),
     appId(_appId),
     apiKey(_apiKey),
     endpoint(_endpoint) {
@@ -51,7 +51,7 @@ void BackendlessAPI::request(
     QMap<QString, QString> customParams,
     bool isPost,
     std::function<void(QNetworkReply*)> const& handleRequest
- ) {
+) {
     QUrl url(urlString);
     QNetworkRequest request(url);
 

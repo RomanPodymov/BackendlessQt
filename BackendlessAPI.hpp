@@ -34,5 +34,5 @@ private:
     QString endpoint;
 
 public:
-    BackendlessUserAPI userAPI;
+    // BackendlessUserAPI userAPI;
 };
