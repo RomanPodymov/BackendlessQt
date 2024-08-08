@@ -6,36 +6,36 @@ Qt wrapper for [Backendless](https://backendless.com).
 
 Create a new API instance
 ```
-API api(API("YOUR_APP_ID", "YOUR_REST_API_KEY"));
+BackendlessAPI api(API("YOUR_APP_ID", "YOUR_REST_API_KEY"));
 ```
 
 Register a new user
 ```
-QObject::connect(&api, &API::userRegistered, [](){
+QObject::connect(&api.userAPI, &BackendlessUserAPI::userRegistered, this, [](){
     // User is registered
 });
-api.registerUser(BackendlessUser("myemail@email.com", "Roman", "Password"));
+api.userAPI.registerUser(BackendlessUser("myemail@email.com", "Roman", "Password"));
 ```
 
 Sign in
 ```
-QObject::connect(&api, &API::userSignedIn, [](){
+QObject::connect(&api.userAPI, &BackendlessUserAPI::userSignedIn, this, [](){
     // User is signed in
 });
-api.signInUser("myemail@email.com", "Password");
+api.userAPI.signInUser("myemail@email.com", "Password");
 ```
 
 Validate user token
 ```
-QObject::connect(&api, &API::userTokenValidated, [](auto isValid){
+QObject::connect(&api.userAPI, &BackendlessUserAPI::userTokenValidated, this, [](auto isValid){
     // Is user token valid?
 });
-api.validateUserToken();
+api.userAPI.validateUserToken();
 ```
 
 Add a new item to a table
 ```
-QObject::connect(&api, &API::itemAdded, [&](){
+QObject::connect(&api, &BackendlessAPI::itemAdded, this, [&](){
     // Item is added
 });
 api.addItemToTable(
@@ -49,7 +49,7 @@ api.addItemToTable(
 
 Read table items
 ```
-QObject::connect(&api, &API::tableItemsLoaded, [&](auto response){
+QObject::connect(&api, &BackendlessAPI::tableItemsLoaded, this, [&](auto response){
     qDebug() << "Loaded " << response;
 });
 api.loadTableItems("TableName");
