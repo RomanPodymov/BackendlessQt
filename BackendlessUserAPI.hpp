@@ -11,8 +11,17 @@
 #include <QNetworkAccessManager>
 #include "BackendlessUser.hpp"
 
-enum class BackendlessError {
+enum class BackendlessErrorCode {
+    noError = 0,
     invalidLoginOrPassword = 3003
+};
+
+struct BackendlessError {
+    BackendlessErrorCode code;
+
+    BackendlessError(
+        BackendlessErrorCode _code
+    ): code(_code) { }
 };
 
 class BackendlessUserAPI: public QObject {
@@ -31,7 +40,7 @@ signals:
     void userTokenValidated(bool);
 
 private:
-    int extractError(QByteArray replyValue);
+    BackendlessErrorCode extractError(QByteArray replyValue);
     QString extractToken(QByteArray);
     void request(QString, QMap<QString, QString>, bool, std::function<void(QNetworkReply*)> const&);
 

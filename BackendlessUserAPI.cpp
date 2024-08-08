@@ -48,11 +48,14 @@ void BackendlessUserAPI::signInUser(QString login, QString password) {
             qDebug() << replyValue;
 
             auto errorCode = extractError(replyValue);
-            if (errorCode != 0) {
-                emit signInUserResult(BackendlessError::invalidLoginOrPassword);
-            } else {
+            switch (errorCode) {
+            case BackendlessErrorCode::noError:
                 userToken = extractToken(replyValue);
                 emit signInUserResult(BackendlessSignInUser(userToken));
+                break;
+            default:
+                emit signInUserResult(BackendlessError(errorCode));
+                break;
             }
         }
     );
@@ -70,11 +73,11 @@ void BackendlessUserAPI::validateUserToken() {
     );
 }
 
-int BackendlessUserAPI::extractError(QByteArray replyValue) {
+BackendlessErrorCode BackendlessUserAPI::extractError(QByteArray replyValue) {
     QJsonParseError jsonError;
     QJsonDocument jsonResponse = QJsonDocument::fromJson(replyValue, &jsonError);
     QJsonObject jsonObject = jsonResponse.object();
-    return jsonObject["code"].toInt();
+    return static_cast<BackendlessErrorCode>(jsonObject["code"].toInt());
 }
 
 QString BackendlessUserAPI::extractToken(QByteArray replyValue) {
