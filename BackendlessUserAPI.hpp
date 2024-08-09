@@ -10,30 +10,43 @@
 #include <QMap>
 #include <QNetworkAccessManager>
 #include "BackendlessUser.hpp"
+#include "BasicAPI.hpp"
 
-enum class BackendlessError {
+enum class BackendlessErrorCode {
+    noError = 0,
     invalidLoginOrPassword = 3003
 };
 
-class BackendlessUserAPI: public QObject {
+enum class BackendlessValidateUserTokenError {
+    invalidResponse
+};
+
+struct BackendlessError {
+    BackendlessErrorCode code;
+
+    BackendlessError(
+        BackendlessErrorCode _code
+    ): code(_code) { }
+};
+
+class BackendlessUserAPI: public QObject, public BasicAPI {
     Q_OBJECT
 
 public:
     BackendlessUserAPI(QNetworkAccessManager*, QString _appId, QString _apiKey, QString _endpoint = "https://eu-api.backendless.com/");
-    void registerUser(BackendlessUser);
+
+    void registerUser(BackendlessRegisterUser);
     void signInUser(QString, QString);
     void validateUserToken();
 
 signals:
     void userRegistered();
-    void userSignedIn();
-    void userSignInError(BackendlessError);
-    void userTokenValidated(bool);
+    void signInUserResult(std::variant<BackendlessSignInUser, BackendlessError>);
+    void validateUserTokenResult(std::variant<bool, BackendlessValidateUserTokenError>);
 
 private:
-    int extractError(QByteArray replyValue);
+    BackendlessErrorCode extractError(QByteArray replyValue);
     QString extractToken(QByteArray);
-    void request(QString, QMap<QString, QString>, bool, std::function<void(QNetworkReply*)> const&);
 
 private:
     QNetworkAccessManager* networkAccessManager;

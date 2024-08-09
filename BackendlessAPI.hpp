@@ -11,7 +11,7 @@
 #include <QNetworkAccessManager>
 #include "BackendlessUserAPI.hpp"
 
-class BackendlessAPI: public QObject {
+class BackendlessAPI: public QObject, public BasicAPI {
     Q_OBJECT
 
 public:
@@ -22,9 +22,6 @@ public:
 signals:
     void itemAdded();
     void tableItemsLoaded(QString);
-
-private:
-    void request(QString, QMap<QString, QString>, bool, std::function<void(QNetworkReply*)> const&);
 
 public:
     BackendlessUserAPI userAPI;
