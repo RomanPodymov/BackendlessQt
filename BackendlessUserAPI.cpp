@@ -31,7 +31,8 @@ void BackendlessUserAPI::registerUser(BackendlessRegisterUser user) {
             {"password", user.password}
         }, true, [=](QNetworkReply* reply){
             auto replyValue = reply->readAll();
-            qDebug() << replyValue;           
+            qDebug() << replyValue;
+
             emit userRegistered();
         }
     );
@@ -68,7 +69,15 @@ void BackendlessUserAPI::validateUserToken() {
 
         }, false, [=](QNetworkReply* reply){
             auto replyValue = reply->readAll();
-            emit userTokenValidated(replyValue == "true");
+            qDebug() << replyValue;
+
+            if (replyValue == "true") {
+                emit validateUserTokenResult(true);
+            } else if (replyValue == "false") {
+                emit validateUserTokenResult(false);
+            } else {
+                emit validateUserTokenResult(BackendlessValidateUserTokenError::invalidResponse);
+            }
         }
     );
 }

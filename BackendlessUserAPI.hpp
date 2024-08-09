@@ -16,6 +16,10 @@ enum class BackendlessErrorCode {
     invalidLoginOrPassword = 3003
 };
 
+enum class BackendlessValidateUserTokenError {
+    invalidResponse
+};
+
 struct BackendlessError {
     BackendlessErrorCode code;
 
@@ -37,7 +41,7 @@ public:
 signals:
     void userRegistered();
     void signInUserResult(std::variant<BackendlessSignInUser, BackendlessError>);
-    void userTokenValidated(bool);
+    void validateUserTokenResult(std::variant<bool, BackendlessValidateUserTokenError>);
 
 private:
     BackendlessErrorCode extractError(QByteArray replyValue);
