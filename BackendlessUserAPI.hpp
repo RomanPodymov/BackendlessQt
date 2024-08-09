@@ -23,10 +23,12 @@ enum class BackendlessValidateUserTokenError {
 
 struct BackendlessError {
     BackendlessErrorCode code;
+    QString message;
 
     BackendlessError(
-        BackendlessErrorCode _code
-    ): code(_code) { }
+        BackendlessErrorCode _code,
+        QString _message
+    ): code(_code), message(_message) { }
 };
 
 class BackendlessUserAPI: public QObject, public BasicAPI {

@@ -12,5 +12,5 @@
 
 class BasicAPI {
 protected:
-    void request(QNetworkAccessManager*, QString, QMap<QString, QString>, bool, std::function<void(QNetworkReply*)> const&);
+    void request(QNetworkAccessManager*, const QObject*, QString, QMap<QString, QString>, bool, std::function<void(QNetworkReply*)> const&);
 };

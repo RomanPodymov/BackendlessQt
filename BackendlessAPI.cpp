@@ -25,6 +25,7 @@ BackendlessAPI::BackendlessAPI(QString _appId, QString _apiKey, QString _endpoin
 void BackendlessAPI::addItemToTable(QString tableName, QMap<QString, QString> params) {
     return request(
         &networkAccessManager,
+        this,
         endpoint + appId + "/" + apiKey + "/data/" + tableName,
         params, true, [=](QNetworkReply* reply){
             auto replyValue = reply->readAll();
@@ -37,6 +38,7 @@ void BackendlessAPI::addItemToTable(QString tableName, QMap<QString, QString> pa
 void BackendlessAPI::loadTableItems(QString tableName) {
     return request(
         &networkAccessManager,
+        this,
         endpoint + appId + "/" + apiKey + "/data/" + tableName,
         {
 

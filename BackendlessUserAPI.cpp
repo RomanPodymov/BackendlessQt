@@ -25,6 +25,7 @@ BackendlessUserAPI::BackendlessUserAPI(QNetworkAccessManager* _networkAccessMana
 void BackendlessUserAPI::registerUser(BackendlessRegisterUser user) {
     return request(
         networkAccessManager,
+        this,
         endpoint + appId + "/" + apiKey + "/users/register",
         {
             {"email", user.email},
@@ -42,6 +43,7 @@ void BackendlessUserAPI::registerUser(BackendlessRegisterUser user) {
 void BackendlessUserAPI::signInUser(QString login, QString password) {
     return request(
         networkAccessManager,
+        this,
         endpoint + appId + "/" + apiKey + "/users/login",
         {
             {"login", login},
@@ -57,7 +59,7 @@ void BackendlessUserAPI::signInUser(QString login, QString password) {
                 emit signInUserResult(BackendlessSignInUser(userToken));
                 break;
             default:
-                emit signInUserResult(BackendlessError(errorCode));
+                emit signInUserResult(BackendlessError(errorCode, ""));
                 break;
             }
         }
@@ -67,6 +69,7 @@ void BackendlessUserAPI::signInUser(QString login, QString password) {
 void BackendlessUserAPI::validateUserToken() {
     return request(
         networkAccessManager,
+        this,
         endpoint + appId + "/" + apiKey + "/users/isvalidusertoken/" + userToken,
         {
 

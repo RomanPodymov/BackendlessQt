@@ -16,6 +16,7 @@
 
 void BasicAPI::request(
     QNetworkAccessManager* networkAccessManager,
+    const QObject* context,
     QString urlString,
     QMap<QString, QString> customParams,
     bool isPost,
@@ -42,7 +43,7 @@ void BasicAPI::request(
     params.removeLast();
     params += "}";
 
-    QObject::connect(networkAccessManager, &QNetworkAccessManager::finished, networkAccessManager, [handleRequest](QNetworkReply* reply) {
+    QObject::connect(networkAccessManager, &QNetworkAccessManager::finished, context, [handleRequest](QNetworkReply* reply) {
         handleRequest(reply);
     }, Qt::SingleShotConnection);
     if (isPost) {
