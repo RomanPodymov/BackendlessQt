@@ -10,6 +10,7 @@
 #include <QMap>
 #include <QNetworkAccessManager>
 #include "BackendlessUser.hpp"
+#include "BasicAPI.hpp"
 
 enum class BackendlessErrorCode {
     noError = 0,
@@ -28,7 +29,7 @@ struct BackendlessError {
     ): code(_code) { }
 };
 
-class BackendlessUserAPI: public QObject {
+class BackendlessUserAPI: public QObject, public BasicAPI {
     Q_OBJECT
 
 public:
@@ -46,7 +47,6 @@ signals:
 private:
     BackendlessErrorCode extractError(QByteArray replyValue);
     QString extractToken(QByteArray);
-    void request(QString, QMap<QString, QString>, bool, std::function<void(QNetworkReply*)> const&);
 
 private:
     QNetworkAccessManager* networkAccessManager;

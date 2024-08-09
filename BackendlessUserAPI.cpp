@@ -24,6 +24,7 @@ BackendlessUserAPI::BackendlessUserAPI(QNetworkAccessManager* _networkAccessMana
 
 void BackendlessUserAPI::registerUser(BackendlessRegisterUser user) {
     return request(
+        networkAccessManager,
         endpoint + appId + "/" + apiKey + "/users/register",
         {
             {"email", user.email},
@@ -40,6 +41,7 @@ void BackendlessUserAPI::registerUser(BackendlessRegisterUser user) {
 
 void BackendlessUserAPI::signInUser(QString login, QString password) {
     return request(
+        networkAccessManager,
         endpoint + appId + "/" + apiKey + "/users/login",
         {
             {"login", login},
@@ -64,6 +66,7 @@ void BackendlessUserAPI::signInUser(QString login, QString password) {
 
 void BackendlessUserAPI::validateUserToken() {
     return request(
+        networkAccessManager,
         endpoint + appId + "/" + apiKey + "/users/isvalidusertoken/" + userToken,
         {
 
@@ -94,41 +97,4 @@ QString BackendlessUserAPI::extractToken(QByteArray replyValue) {
     QJsonDocument jsonResponse = QJsonDocument::fromJson(replyValue, &jsonError);
     QJsonObject jsonObject = jsonResponse.object();
     return jsonObject["user-token"].toString();
-}
-
-void BackendlessUserAPI::request(
-    QString urlString,
-    QMap<QString, QString> customParams,
-    bool isPost,
-    std::function<void(QNetworkReply*)> const& handleRequest
-) {
-    QUrl url(urlString);
-    QNetworkRequest request(url);
-
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-
-    QString params = "{";
-
-    for (auto [key, value] : customParams.asKeyValueRange()) {
-        params += "\"";
-        params += key;
-        params += "\"";
-        params += ":";
-        params += "\"";
-        params += value;
-        params += "\"";
-        params += ",";
-    }
-
-    params.removeLast();
-    params += "}";
-
-    QObject::connect(networkAccessManager, &QNetworkAccessManager::finished, this, [handleRequest](QNetworkReply* reply) {
-        handleRequest(reply);
-    }, Qt::SingleShotConnection);
-    if (isPost) {
-        networkAccessManager->post(request, params.toUtf8());
-    } else {
-        networkAccessManager->get(request);
-    }
 }
