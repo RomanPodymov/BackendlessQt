@@ -35,7 +35,7 @@ void BackendlessUserAPI::registerUser(BackendlessRegisterUser user) {
             auto replyValue = reply->readAll();
             qDebug() << replyValue;
 
-            emit userRegistered();
+            emit registerUserResult();
         }
     );
 }
@@ -52,7 +52,10 @@ void BackendlessUserAPI::signInUser(QString login, QString password) {
             auto replyValue = reply->readAll();
             qDebug() << replyValue;
 
+            #ifdef BACKENDLESS_VARIANT_RESPONSE
             emit signInUserResult(extractResult(replyValue));
+            #else
+            #endif
         }
     );
 }
@@ -68,6 +71,7 @@ void BackendlessUserAPI::validateUserToken() {
             auto replyValue = reply->readAll();
             qDebug() << replyValue;
 
+            #ifdef BACKENDLESS_VARIANT_RESPONSE
             if (replyValue == "true") {
                 emit validateUserTokenResult(true);
             } else if (replyValue == "false") {
@@ -75,10 +79,14 @@ void BackendlessUserAPI::validateUserToken() {
             } else {
                 emit validateUserTokenResult(BackendlessValidateUserTokenError::invalidResponse);
             }
+            #else
+
+            #endif
         }
     );
 }
 
+#ifdef BACKENDLESS_VARIANT_RESPONSE
 std::variant<BackendlessSignInUser, BackendlessError, QJsonParseError> BackendlessUserAPI::extractResult(QByteArray replyValue) {
     QJsonParseError jsonError;
     QJsonDocument jsonResponse = QJsonDocument::fromJson(replyValue, &jsonError);
@@ -104,3 +112,4 @@ std::variant<BackendlessSignInUser, BackendlessError, QJsonParseError> Backendle
             );
     }
 }
+#endif

@@ -6,6 +6,9 @@
 //  Copyright © 2024 BackendlessQt. All rights reserved.
 //
 
+#ifndef BACKENDLESS_API_H
+#define BACKENDLESS_API_H
+
 #include <QString>
 #include <QMap>
 #include <QNetworkAccessManager>
@@ -32,3 +35,5 @@ private:
     QString apiKey;
     QString endpoint;
 };
+
+#endif

@@ -6,6 +6,9 @@
 //  Copyright © 2024 BackendlessQt. All rights reserved.
 //
 
+#ifndef BACKENDLESS_USER_H
+#define BACKENDLESS_USER_H
+
 #include <QString>
 
 struct BackendlessRegisterUser {
@@ -27,3 +30,5 @@ struct BackendlessSignInUser {
         QString _userToken
     ): userToken(_userToken) { }
 };
+
+#endif

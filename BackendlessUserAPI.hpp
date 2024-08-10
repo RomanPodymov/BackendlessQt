@@ -6,6 +6,11 @@
 //  Copyright © 2024 BackendlessQt. All rights reserved.
 //
 
+#ifndef BACKENDLESS_USER_API_H
+#define BACKENDLESS_USER_API_H
+
+#define BACKENDLESS_VARIANT_RESPONSE
+
 #include <QString>
 #include <QMap>
 #include <QNetworkAccessManager>
@@ -43,12 +48,18 @@ public:
     void validateUserToken();
 
 signals:
-    void userRegistered();
+    void registerUserResult();
+#ifdef BACKENDLESS_VARIANT_RESPONSE
     void signInUserResult(std::variant<BackendlessSignInUser, BackendlessError, QJsonParseError>);
     void validateUserTokenResult(std::variant<bool, BackendlessValidateUserTokenError>);
+#else
+
+#endif
 
 private:
+#ifdef BACKENDLESS_VARIANT_RESPONSE
     std::variant<BackendlessSignInUser, BackendlessError, QJsonParseError> extractResult(QByteArray replyValue);
+#endif
 
 private:
     QNetworkAccessManager* networkAccessManager;
@@ -57,3 +68,5 @@ private:
     QString endpoint;
     QString userToken;
 };
+
+#endif
