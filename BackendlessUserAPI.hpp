@@ -9,6 +9,7 @@
 #include <QString>
 #include <QMap>
 #include <QNetworkAccessManager>
+#include <QJsonParseError>
 #include "BackendlessUser.hpp"
 #include "BasicAPI.hpp"
 
@@ -43,12 +44,11 @@ public:
 
 signals:
     void userRegistered();
-    void signInUserResult(std::variant<BackendlessSignInUser, BackendlessError>);
+    void signInUserResult(std::variant<BackendlessSignInUser, BackendlessError, QJsonParseError>);
     void validateUserTokenResult(std::variant<bool, BackendlessValidateUserTokenError>);
 
 private:
-    BackendlessErrorCode extractError(QByteArray replyValue);
-    QString extractToken(QByteArray);
+    std::variant<BackendlessSignInUser, BackendlessError, QJsonParseError> extractResult(QByteArray replyValue);
 
 private:
     QNetworkAccessManager* networkAccessManager;

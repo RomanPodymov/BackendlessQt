@@ -52,16 +52,7 @@ void BackendlessUserAPI::signInUser(QString login, QString password) {
             auto replyValue = reply->readAll();
             qDebug() << replyValue;
 
-            auto errorCode = extractError(replyValue);
-            switch (errorCode) {
-            case BackendlessErrorCode::noError:
-                userToken = extractToken(replyValue);
-                emit signInUserResult(BackendlessSignInUser(userToken));
-                break;
-            default:
-                emit signInUserResult(BackendlessError(errorCode, ""));
-                break;
-            }
+            emit signInUserResult(extractResult(replyValue));
         }
     );
 }
@@ -88,16 +79,28 @@ void BackendlessUserAPI::validateUserToken() {
     );
 }
 
-BackendlessErrorCode BackendlessUserAPI::extractError(QByteArray replyValue) {
+std::variant<BackendlessSignInUser, BackendlessError, QJsonParseError> BackendlessUserAPI::extractResult(QByteArray replyValue) {
     QJsonParseError jsonError;
     QJsonDocument jsonResponse = QJsonDocument::fromJson(replyValue, &jsonError);
-    QJsonObject jsonObject = jsonResponse.object();
-    return static_cast<BackendlessErrorCode>(jsonObject["code"].toInt());
-}
 
-QString BackendlessUserAPI::extractToken(QByteArray replyValue) {
-    QJsonParseError jsonError;
-    QJsonDocument jsonResponse = QJsonDocument::fromJson(replyValue, &jsonError);
+    switch (jsonError.error) {
+    case QJsonParseError::NoError:
+        break;
+    default:
+        return jsonError;
+    }
+
     QJsonObject jsonObject = jsonResponse.object();
-    return jsonObject["user-token"].toString();
+    auto code = static_cast<BackendlessErrorCode>(jsonObject["code"].toInt());
+    switch (code) {
+        case BackendlessErrorCode::noError:
+            return BackendlessSignInUser(
+                jsonObject["user-token"].toString()
+            );
+        default:
+            return BackendlessError(
+                code,
+                jsonObject["message"].toString()
+            );
+    }
 }
