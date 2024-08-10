@@ -22,8 +22,10 @@ BackendlessUserAPI::BackendlessUserAPI(QNetworkAccessManager* _networkAccessMana
 
 }
 
-void BackendlessUserAPI::registerUser(BackendlessUser user) {
+void BackendlessUserAPI::registerUser(BackendlessRegisterUser user) {
     return request(
+        networkAccessManager,
+        this,
         endpoint + appId + "/" + apiKey + "/users/register",
         {
             {"email", user.email},
@@ -31,14 +33,17 @@ void BackendlessUserAPI::registerUser(BackendlessUser user) {
             {"password", user.password}
         }, true, [=](QNetworkReply* reply){
             auto replyValue = reply->readAll();
-            qDebug() << replyValue;           
-            emit userRegistered();
+            qDebug() << replyValue;
+
+            emit registerUserResult();
         }
     );
 }
 
 void BackendlessUserAPI::signInUser(QString login, QString password) {
     return request(
+        networkAccessManager,
+        this,
         endpoint + appId + "/" + apiKey + "/users/login",
         {
             {"login", login},
@@ -47,76 +52,98 @@ void BackendlessUserAPI::signInUser(QString login, QString password) {
             auto replyValue = reply->readAll();
             qDebug() << replyValue;
 
-            auto errorCode = extractError(replyValue);
-            if (errorCode != 0) {
-                emit userSignInError(BackendlessError::invalidLoginOrPassword);
-            } else {
-                userToken = extractToken(replyValue);
-                emit userSignedIn();
-            }
+            #ifdef BACKENDLESS_VARIANT_RESPONSE
+            extractResult(
+                replyValue,
+                [=](auto user) {
+                    emit signInUserResult(user);
+                },
+                [=](auto beError) {
+                    emit signInUserResult(beError);
+                },
+                [=](auto jsonError) {
+                    emit signInUserResult(jsonError);
+                }
+            );
+            #else
+            extractResult(
+                replyValue,
+                [=](auto user) {
+                    emit signInUserSuccess(user);
+                },
+                [=](auto beError) {
+                    emit signInUserErrorBackendless(beError);
+                },
+                [=](auto jsonError) {
+                    emit signInUserErrorJson(jsonError);
+                }
+            );
+            #endif
         }
     );
 }
 
 void BackendlessUserAPI::validateUserToken() {
     return request(
+        networkAccessManager,
+        this,
         endpoint + appId + "/" + apiKey + "/users/isvalidusertoken/" + userToken,
         {
 
         }, false, [=](QNetworkReply* reply){
             auto replyValue = reply->readAll();
-            emit userTokenValidated(replyValue == "true");
+            qDebug() << replyValue;
+
+            #ifdef BACKENDLESS_VARIANT_RESPONSE
+            if (replyValue == "true") {
+                emit validateUserTokenResult(true);
+            } else if (replyValue == "false") {
+                emit validateUserTokenResult(false);
+            } else {
+                emit validateUserTokenResult(BackendlessValidateUserTokenError::invalidResponse);
+            }
+            #else
+            if (replyValue == "true") {
+                emit validateUserTokenSuccess(true);
+            } else if (replyValue == "false") {
+                emit validateUserTokenSuccess(false);
+            } else {
+                emit validateUserTokenError(BackendlessValidateUserTokenError::invalidResponse);
+            }
+            #endif
         }
     );
 }
 
-int BackendlessUserAPI::extractError(QByteArray replyValue) {
-    QJsonParseError jsonError;
-    QJsonDocument jsonResponse = QJsonDocument::fromJson(replyValue, &jsonError);
-    QJsonObject jsonObject = jsonResponse.object();
-    return jsonObject["code"].toInt();
-}
-
-QString BackendlessUserAPI::extractToken(QByteArray replyValue) {
-    QJsonParseError jsonError;
-    QJsonDocument jsonResponse = QJsonDocument::fromJson(replyValue, &jsonError);
-    QJsonObject jsonObject = jsonResponse.object();
-    return jsonObject["user-token"].toString();
-}
-
-void BackendlessUserAPI::request(
-    QString urlString,
-    QMap<QString, QString> customParams,
-    bool isPost,
-    std::function<void(QNetworkReply*)> const& handleRequest
+void BackendlessUserAPI::extractResult(
+    QByteArray replyValue,
+    std::function<void(BackendlessSignInUser)> const& onUser,
+    std::function<void(BackendlessError)> const& onBEError,
+    std::function<void(QJsonParseError)> const& onJSONError
 ) {
-    QUrl url(urlString);
-    QNetworkRequest request(url);
+    QJsonParseError jsonError;
+    auto jsonResponse = QJsonDocument::fromJson(replyValue, &jsonError);
 
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-
-    QString params = "{";
-
-    for (auto [key, value] : customParams.asKeyValueRange()) {
-        params += "\"";
-        params += key;
-        params += "\"";
-        params += ":";
-        params += "\"";
-        params += value;
-        params += "\"";
-        params += ",";
+    switch (jsonError.error) {
+    case QJsonParseError::NoError:
+        break;
+    default:
+        onJSONError(jsonError);
+        return;
     }
 
-    params.removeLast();
-    params += "}";
-
-    QObject::connect(networkAccessManager, &QNetworkAccessManager::finished, this, [handleRequest](QNetworkReply* reply) {
-        handleRequest(reply);
-    }, Qt::SingleShotConnection);
-    if (isPost) {
-        networkAccessManager->post(request, params.toUtf8());
-    } else {
-        networkAccessManager->get(request);
+    auto jsonObject = jsonResponse.object();
+    auto code = static_cast<BackendlessErrorCode>(jsonObject["code"].toInt());
+    switch (code) {
+        case BackendlessErrorCode::noError:
+            onUser(BackendlessSignInUser(
+                jsonObject["user-token"].toString()
+            ));
+            break;
+        default:
+            onBEError(BackendlessError(
+                code,
+                jsonObject["message"].toString()
+            ));
     }
 }

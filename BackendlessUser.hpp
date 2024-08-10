@@ -6,18 +6,29 @@
 //  Copyright © 2024 BackendlessQt. All rights reserved.
 //
 
+#ifndef BACKENDLESS_USER_H
+#define BACKENDLESS_USER_H
+
 #include <QString>
 
-struct BackendlessUser {
+struct BackendlessRegisterUser {
     QString email;
     QString name;
     QString password;
 
-    BackendlessUser(
+    BackendlessRegisterUser(
         QString _email,
         QString _name,
         QString _password
-    ): email(_email), name(_name), password(_password) {
-
-    }
+    ): email(_email), name(_name), password(_password) { }
 };
+
+struct BackendlessSignInUser {
+    QString userToken;
+
+    BackendlessSignInUser(
+        QString _userToken
+    ): userToken(_userToken) { }
+};
+
+#endif

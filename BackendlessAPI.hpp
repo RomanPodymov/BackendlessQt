@@ -6,12 +6,15 @@
 //  Copyright © 2024 BackendlessQt. All rights reserved.
 //
 
+#ifndef BACKENDLESS_API_H
+#define BACKENDLESS_API_H
+
 #include <QString>
 #include <QMap>
 #include <QNetworkAccessManager>
 #include "BackendlessUserAPI.hpp"
 
-class BackendlessAPI: public QObject {
+class BackendlessAPI: public QObject, public BasicAPI {
     Q_OBJECT
 
 public:
@@ -23,9 +26,6 @@ signals:
     void itemAdded();
     void tableItemsLoaded(QString);
 
-private:
-    void request(QString, QMap<QString, QString>, bool, std::function<void(QNetworkReply*)> const&);
-
 public:
     BackendlessUserAPI userAPI;
 
@@ -35,3 +35,5 @@ private:
     QString apiKey;
     QString endpoint;
 };
+
+#endif
