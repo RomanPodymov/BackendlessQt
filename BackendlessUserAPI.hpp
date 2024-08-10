@@ -53,13 +53,18 @@ signals:
     void signInUserResult(std::variant<BackendlessSignInUser, BackendlessError, QJsonParseError>);
     void validateUserTokenResult(std::variant<bool, BackendlessValidateUserTokenError>);
 #else
-
+    void signInUserSuccess(BackendlessSignInUser);
+    void signInUserErrorBackendless(BackendlessError);
+    void signInUserErrorJson(QJsonParseError);
 #endif
 
 private:
-#ifdef BACKENDLESS_VARIANT_RESPONSE
-    std::variant<BackendlessSignInUser, BackendlessError, QJsonParseError> extractResult(QByteArray replyValue);
-#endif
+    void extractResult(
+        QByteArray replyValue,
+        std::function<void(BackendlessSignInUser)> const& onUser,
+        std::function<void(BackendlessError)> const& onBEError,
+        std::function<void(QJsonParseError)> const& onJSONError
+    );
 
 private:
     QNetworkAccessManager* networkAccessManager;

@@ -53,8 +53,31 @@ void BackendlessUserAPI::signInUser(QString login, QString password) {
             qDebug() << replyValue;
 
             #ifdef BACKENDLESS_VARIANT_RESPONSE
-            emit signInUserResult(extractResult(replyValue));
+            extractResult(
+                replyValue,
+                [=](auto user) {
+                    emit signInUserResult(user);
+                },
+                [=](auto beError) {
+                    emit signInUserResult(beError);
+                },
+                [=](auto jsonError) {
+                    emit signInUserResult(jsonError);
+                }
+            );
             #else
+            extractResult(
+                replyValue,
+                [=](auto user) {
+                    emit signInUserSuccess(user);
+                },
+                [=](auto beError) {
+                    emit signInUserErrorBackendless(beError);
+                },
+                [=](auto jsonError) {
+                    emit signInUserErrorJson(jsonError);
+                }
+            );
             #endif
         }
     );
@@ -86,30 +109,33 @@ void BackendlessUserAPI::validateUserToken() {
     );
 }
 
-#ifdef BACKENDLESS_VARIANT_RESPONSE
-std::variant<BackendlessSignInUser, BackendlessError, QJsonParseError> BackendlessUserAPI::extractResult(QByteArray replyValue) {
+void BackendlessUserAPI::extractResult(
+    QByteArray replyValue,
+    std::function<void(BackendlessSignInUser)> const& onUser,
+    std::function<void(BackendlessError)> const& onBEError,
+    std::function<void(QJsonParseError)> const& onJSONError
+) {
     QJsonParseError jsonError;
-    QJsonDocument jsonResponse = QJsonDocument::fromJson(replyValue, &jsonError);
+    auto jsonResponse = QJsonDocument::fromJson(replyValue, &jsonError);
 
     switch (jsonError.error) {
     case QJsonParseError::NoError:
         break;
     default:
-        return jsonError;
+        onJSONError(jsonError);
     }
 
-    QJsonObject jsonObject = jsonResponse.object();
+    auto jsonObject = jsonResponse.object();
     auto code = static_cast<BackendlessErrorCode>(jsonObject["code"].toInt());
     switch (code) {
         case BackendlessErrorCode::noError:
-            return BackendlessSignInUser(
+            onUser(BackendlessSignInUser(
                 jsonObject["user-token"].toString()
-            );
+            ));
         default:
-            return BackendlessError(
+            onBEError(BackendlessError(
                 code,
                 jsonObject["message"].toString()
-            );
+            ));
     }
 }
-#endif
