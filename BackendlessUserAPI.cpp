@@ -103,7 +103,13 @@ void BackendlessUserAPI::validateUserToken() {
                 emit validateUserTokenResult(BackendlessValidateUserTokenError::invalidResponse);
             }
             #else
-
+            if (replyValue == "true") {
+                emit validateUserTokenSuccess(true);
+            } else if (replyValue == "false") {
+                emit validateUserTokenSuccess(false);
+            } else {
+                emit validateUserTokenError(BackendlessValidateUserTokenError::invalidResponse);
+            }
             #endif
         }
     );
@@ -123,6 +129,7 @@ void BackendlessUserAPI::extractResult(
         break;
     default:
         onJSONError(jsonError);
+        return;
     }
 
     auto jsonObject = jsonResponse.object();
@@ -132,6 +139,7 @@ void BackendlessUserAPI::extractResult(
             onUser(BackendlessSignInUser(
                 jsonObject["user-token"].toString()
             ));
+            break;
         default:
             onBEError(BackendlessError(
                 code,

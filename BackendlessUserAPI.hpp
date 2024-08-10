@@ -9,7 +9,7 @@
 #ifndef BACKENDLESS_USER_API_H
 #define BACKENDLESS_USER_API_H
 
-#define BACKENDLESS_VARIANT_RESPONSE
+// #define BACKENDLESS_VARIANT_RESPONSE
 
 #include <QString>
 #include <QMap>
@@ -49,13 +49,20 @@ public:
 
 signals:
     void registerUserResult();
+
 #ifdef BACKENDLESS_VARIANT_RESPONSE
     void signInUserResult(std::variant<BackendlessSignInUser, BackendlessError, QJsonParseError>);
-    void validateUserTokenResult(std::variant<bool, BackendlessValidateUserTokenError>);
 #else
     void signInUserSuccess(BackendlessSignInUser);
     void signInUserErrorBackendless(BackendlessError);
     void signInUserErrorJson(QJsonParseError);
+#endif
+
+#ifdef BACKENDLESS_VARIANT_RESPONSE
+    void validateUserTokenResult(std::variant<bool, BackendlessValidateUserTokenError>);
+#else
+    void validateUserTokenSuccess(bool);
+    void validateUserTokenError(BackendlessValidateUserTokenError);
 #endif
 
 private:
