@@ -11,23 +11,26 @@ BackendlessAPI api(API("YOUR_APP_ID", "YOUR_REST_API_KEY"));
 
 Register a new user
 ```
-QObject::connect(&api.userAPI, &BackendlessUserAPI::userRegistered, this, [](){
+QObject::connect(&api.userAPI, &BackendlessUserAPI::registerUserResult, this, [](){
     // User is registered
 });
-api.userAPI.registerUser(BackendlessUser("myemail@email.com", "Roman", "Password"));
+api.userAPI.registerUser(BackendlessRegisterUser("myemail@email.com", "Roman", "Password"));
 ```
 
 Sign in
 ```
-QObject::connect(&api.userAPI, &BackendlessUserAPI::userSignedIn, this, [](){
+QObject::connect(&api.userAPI, &BackendlessUserAPI::signInUserSuccess, this, [](auto user){
     // User is signed in
+});
+QObject::connect(&api.userAPI, &BackendlessUserAPI::signInUserErrorBackendless, this, [](auto error){
+    // Wrong credentials
 });
 api.userAPI.signInUser("myemail@email.com", "Password");
 ```
 
 Validate user token
 ```
-QObject::connect(&api.userAPI, &BackendlessUserAPI::userTokenValidated, this, [](auto isValid){
+QObject::connect(&api.userAPI, &BackendlessUserAPI::validateUserTokenSuccess, this, [](auto isValid){
     // Is user token valid?
 });
 api.userAPI.validateUserToken();
