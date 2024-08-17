@@ -22,6 +22,11 @@ HEADERS += \
 ios {
     CONFIG += staticlib
 }
+
 macos {
+    CONFIG += staticlib
+}
+
+win32 {
     CONFIG += staticlib
 }
