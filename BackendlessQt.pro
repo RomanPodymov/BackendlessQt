@@ -4,7 +4,8 @@ QT += core network
 
 TEMPLATE = lib
 
-DEFINES += MAKE_TEST_LIB
+DEFINES += MAKE_BACKENDLESS_LIB \
+    BACKENDLESS_VARIANT_RESPONSE___
 
 TARGET = BackendlessQt
 
@@ -24,9 +25,5 @@ ios {
 }
 
 macos {
-    CONFIG += staticlib
-}
-
-win32 {
     CONFIG += staticlib
 }

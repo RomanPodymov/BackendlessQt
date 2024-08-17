@@ -14,13 +14,13 @@
 #include <QNetworkAccessManager>
 #include "BackendlessUserAPI.hpp"
 
-#if defined MAKE_TEST_LIB
-#define TEST_LIB_EXPORT Q_DECL_EXPORT
+#if defined MAKE_BACKENDLESS_LIB
+#define BACKENDLESS_LIB_EXPORT Q_DECL_EXPORT
 #else
-#define TEST_LIB_EXPORT Q_DECL_IMPORT
+#define BACKENDLESS_LIB_EXPORT Q_DECL_IMPORT
 #endif
 
-class TEST_LIB_EXPORT BackendlessAPI: public QObject, public BasicAPI {
+class BACKENDLESS_LIB_EXPORT BackendlessAPI: public QObject, public BasicAPI {
     Q_OBJECT
 
 public:

@@ -9,8 +9,6 @@
 #ifndef BACKENDLESS_USER_API_H
 #define BACKENDLESS_USER_API_H
 
-// #define BACKENDLESS_VARIANT_RESPONSE
-
 #include <QString>
 #include <QMap>
 #include <QNetworkAccessManager>
