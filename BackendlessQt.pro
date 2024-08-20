@@ -20,10 +20,6 @@ HEADERS += \
     BackendlessUserAPI.hpp \
     BackendlessUser.hpp
 
-ios {
-    CONFIG += staticlib
-}
-
-macos {
+!android {
     CONFIG += staticlib
 }
