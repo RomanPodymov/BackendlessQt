@@ -46,6 +46,7 @@ public:
     void registerUser(BackendlessRegisterUser);
     void signInUser(QString, QString);
     void validateUserToken();
+    void restorePassword();
 
 signals:
     void registerUserResult();
