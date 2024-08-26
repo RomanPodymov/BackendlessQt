@@ -115,6 +115,10 @@ void BackendlessUserAPI::validateUserToken() {
     );
 }
 
+void BackendlessUserAPI::restorePassword() {
+
+}
+
 void BackendlessUserAPI::extractResult(
     QByteArray replyValue,
     std::function<void(BackendlessSignInUser)> const& onUser,
