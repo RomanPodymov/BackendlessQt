@@ -115,8 +115,20 @@ void BackendlessUserAPI::validateUserToken() {
     );
 }
 
-void BackendlessUserAPI::restorePassword() {
+void BackendlessUserAPI::restorePassword(QString email) {
+    return request(
+        networkAccessManager,
+        this,
+        endpoint + appId + "/" + apiKey + "/users/restorepassword/" + email,
+        {
 
+        }, false, [&](QNetworkReply* reply){
+            auto replyValue = reply->readAll();
+            qDebug() << replyValue;
+
+            emit restorePasswordSuccess(replyValue);
+        }
+    );
 }
 
 void BackendlessUserAPI::extractResult(
