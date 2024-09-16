@@ -22,7 +22,7 @@ BackendlessUserAPI::BackendlessUserAPI(QNetworkAccessManager* _networkAccessMana
 
 }
 
-void BackendlessUserAPI::registerUser(BackendlessRegisterUser user) {
+void BackendlessUserAPI::registerUser(BackendlessRegisterUserRepresentable& user) {
     return request(
         networkAccessManager,
         this,
