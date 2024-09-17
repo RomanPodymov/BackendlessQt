@@ -14,6 +14,7 @@
 
 class BackendlessRegisterUserRepresentable {
 public:
+    virtual ~BackendlessRegisterUserRepresentable() = default;
     virtual QMap<QString, QString> getAllParams() = 0;
 };
 
