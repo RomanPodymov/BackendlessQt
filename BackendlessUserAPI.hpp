@@ -20,6 +20,7 @@
 
 enum class BackendlessErrorCode {
     noError = 0,
+    unknownEntity = 1009,
     invalidLoginOrPassword = 3003
 };
 
