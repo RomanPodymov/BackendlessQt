@@ -45,7 +45,11 @@ void BackendlessAPI::loadTableItems(QString tableName) {
         }, false, [&](QNetworkReply* reply){
             auto replyValue = reply->readAll();
             qDebug() << replyValue;
-            emit tableItemsLoaded(replyValue);
+#ifdef BACKENDLESS_VARIANT_RESPONSE
+
+#else
+            emit loadTableItemsSuccess(replyValue);
+#endif
         }
     );
 }

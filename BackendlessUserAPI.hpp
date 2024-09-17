@@ -18,25 +18,6 @@
 #include "BackendlessUser.hpp"
 #include "BasicAPI.hpp"
 
-enum class BackendlessErrorCode {
-    noError = 0,
-    invalidLoginOrPassword = 3003
-};
-
-enum class BackendlessValidateUserTokenError {
-    invalidResponse
-};
-
-struct BackendlessError {
-    BackendlessErrorCode code;
-    QString message;
-
-    BackendlessError(
-        BackendlessErrorCode _code,
-        QString _message
-    ): code(_code), message(_message) { }
-};
-
 class BackendlessUserAPI: public QObject, public BasicAPI {
     Q_OBJECT
 
@@ -67,14 +48,6 @@ signals:
 #endif
 
     void restorePasswordSuccess(QString);
-
-private:
-    void extractResult(
-        QByteArray replyValue,
-        std::function<void(BackendlessSignInUser)> const& onUser,
-        std::function<void(BackendlessError)> const& onBEError,
-        std::function<void(QJsonParseError)> const& onJSONError
-    );
 
 private:
     QNetworkAccessManager* networkAccessManager;
