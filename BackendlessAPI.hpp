@@ -31,7 +31,12 @@ public:
 
 signals:
     void itemAdded();
-    void tableItemsLoaded(QString);
+#ifdef BACKENDLESS_VARIANT_RESPONSE
+
+#else
+    void loadTableItemsSuccess(QString);
+    void loadTableItemsError(BackendlessErrorCode);
+#endif
 
 public:
     BackendlessUserAPI userAPI;

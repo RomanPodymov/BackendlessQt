@@ -12,7 +12,8 @@ TARGET = BackendlessQt
 SOURCES += \
     BasicAPI.cpp \
     BackendlessAPI.cpp \
-    BackendlessUserAPI.cpp
+    BackendlessUserAPI.cpp \
+    BackendlessUser.cpp
 
 HEADERS += \
     BasicAPI.hpp \
