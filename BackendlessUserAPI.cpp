@@ -23,12 +23,12 @@ BackendlessUserAPI::BackendlessUserAPI(QNetworkAccessManager* _networkAccessMana
 }
 
 void BackendlessUserAPI::registerUser(BackendlessRegisterUserRepresentable& user) {
-    return request(
+    request(
         networkAccessManager,
         this,
         endpoint + appId + "/" + apiKey + "/users/register",
         user.getAllParams(),
-        true,
+        BERequestMethod::post,
         [&](QNetworkReply* reply){
             auto replyValue = reply->readAll();
             qDebug() << replyValue;
@@ -39,14 +39,16 @@ void BackendlessUserAPI::registerUser(BackendlessRegisterUserRepresentable& user
 }
 
 void BackendlessUserAPI::signInUser(QString login, QString password) {
-    return request(
+    request(
         networkAccessManager,
         this,
         endpoint + appId + "/" + apiKey + "/users/login",
         {
             {"login", login},
             {"password", password}
-        }, true, [&](QNetworkReply* reply){
+        },
+        BERequestMethod::post,
+        [&](QNetworkReply* reply){
             auto replyValue = reply->readAll();
             qDebug() << replyValue;
 
@@ -82,13 +84,15 @@ void BackendlessUserAPI::signInUser(QString login, QString password) {
 }
 
 void BackendlessUserAPI::validateUserToken() {
-    return request(
+    request(
         networkAccessManager,
         this,
         endpoint + appId + "/" + apiKey + "/users/isvalidusertoken/" + userToken,
         {
 
-        }, false, [&](QNetworkReply* reply){
+        },
+        BERequestMethod::get,
+        [&](QNetworkReply* reply){
             auto replyValue = reply->readAll();
             qDebug() << replyValue;
 
@@ -114,13 +118,15 @@ void BackendlessUserAPI::validateUserToken() {
 }
 
 void BackendlessUserAPI::restorePassword(QString email) {
-    return request(
+    request(
         networkAccessManager,
         this,
         endpoint + appId + "/" + apiKey + "/users/restorepassword/" + email,
         {
 
-        }, false, [&](QNetworkReply* reply){
+        },
+        BERequestMethod::get,
+        [&](QNetworkReply* reply){
             auto replyValue = reply->readAll();
             qDebug() << replyValue;
 

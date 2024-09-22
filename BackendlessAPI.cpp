@@ -23,11 +23,13 @@ BackendlessAPI::BackendlessAPI(QString _appId, QString _apiKey, QString _endpoin
 }
 
 void BackendlessAPI::addItemToTable(QString tableName, QMap<QString, QString> params) {
-    return request(
+    request(
         &networkAccessManager,
         this,
         endpoint + appId + "/" + apiKey + "/data/" + tableName,
-        params, true, [&](QNetworkReply* reply){
+        params,
+        BERequestMethod::post,
+        [&](QNetworkReply* reply){
             auto replyValue = reply->readAll();
             qDebug() << replyValue;
             emit itemAdded();
@@ -35,14 +37,31 @@ void BackendlessAPI::addItemToTable(QString tableName, QMap<QString, QString> pa
     );
 }
 
+void BackendlessAPI::deleteItemFromTable(QString tableName, QString objectId) {
+    request(
+        &networkAccessManager,
+        this,
+        endpoint + appId + "/" + apiKey + "/data/" + tableName + "/" + objectId,
+        {
+
+        },
+        BERequestMethod::deleteResource,
+        [&](QNetworkReply* reply){
+            emit deleteItemFromTableSuccess();
+        }
+    );
+}
+
 void BackendlessAPI::loadTableItems(QString tableName) {
-    return request(
+    request(
         &networkAccessManager,
         this,
         endpoint + appId + "/" + apiKey + "/data/" + tableName,
         {
 
-        }, false, [&](QNetworkReply* reply){
+        },
+        BERequestMethod::get,
+        [&](QNetworkReply* reply){
             auto replyValue = reply->readAll();
             qDebug() << replyValue;
 #ifdef BACKENDLESS_VARIANT_RESPONSE

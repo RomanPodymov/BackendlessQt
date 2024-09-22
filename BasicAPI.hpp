@@ -68,9 +68,23 @@ void extractResult(
     }
 }
 
+enum class BERequestMethod {
+    get,
+    post,
+    put,
+    deleteResource
+};
+
 class BasicAPI {
 protected:
-    void request(QNetworkAccessManager*, const QObject*, QString, QMap<QString, QString>, bool, std::function<void(QNetworkReply*)> const&);
+    void request(
+        QNetworkAccessManager*,
+        const QObject*,
+        QString,
+        QMap<QString, QString>,
+        BERequestMethod,
+        std::function<void(QNetworkReply*)> const&
+    );
 };
 
 #endif
