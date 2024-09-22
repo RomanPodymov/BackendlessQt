@@ -16,6 +16,7 @@
 
 enum class BackendlessErrorCode {
     noError = 0,
+    entityNotFound = 1000,
     unknownEntity = 1009,
     invalidLoginOrPassword = 3003
 };
@@ -37,7 +38,7 @@ struct BackendlessError {
 template<typename T>
 void extractResult(
     QByteArray replyValue,
-    std::function<void(T)> const& onUser,
+    std::function<void(T)> const& onSuccess,
     std::function<void(BackendlessError)> const& onBEError,
     std::function<void(QJsonParseError)> const& onJSONError
 ) {
@@ -56,9 +57,11 @@ void extractResult(
     auto code = static_cast<BackendlessErrorCode>(jsonObject["code"].toInt());
     switch (code) {
     case BackendlessErrorCode::noError:
-        onUser(T(
-            jsonObject["user-token"].toString()
-        ));
+        onSuccess(
+            T(
+                jsonObject
+            )
+        );
         break;
     default:
         onBEError(BackendlessError(
@@ -68,9 +71,23 @@ void extractResult(
     }
 }
 
+enum class BERequestMethod {
+    get,
+    post,
+    put,
+    deleteResource
+};
+
 class BasicAPI {
 protected:
-    void request(QNetworkAccessManager*, const QObject*, QString, QMap<QString, QString>, bool, std::function<void(QNetworkReply*)> const&);
+    void request(
+        QNetworkAccessManager*,
+        const QObject*,
+        QString,
+        QMap<QString, QString>,
+        BERequestMethod,
+        std::function<void(QNetworkReply*)> const&
+    );
 };
 
 #endif
