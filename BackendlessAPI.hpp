@@ -11,8 +11,15 @@
 
 #include <QString>
 #include <QMap>
+#include <QJsonObject>
 #include <QNetworkAccessManager>
 #include "BackendlessUserAPI.hpp"
+
+struct DeletionResult {
+    long deletionTime;
+
+    DeletionResult(QJsonObject jsonObject): deletionTime(jsonObject["deletionTime"].toInteger())
+};
 
 class BackendlessAPI: public QObject, public BasicAPI {
     Q_OBJECT
@@ -25,7 +32,7 @@ public:
 
 signals:
     void itemAdded();
-    void deleteItemFromTableSuccess();
+    void deleteItemFromTableSuccess(DeletionResult);
     void deleteItemFromTableError(BackendlessErrorCode);
 #ifdef BACKENDLESS_VARIANT_RESPONSE
 

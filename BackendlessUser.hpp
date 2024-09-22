@@ -9,6 +9,7 @@
 #ifndef BACKENDLESS_USER_H
 #define BACKENDLESS_USER_H
 
+#include <QJsonObject>
 #include <QMap>
 #include <QString>
 
@@ -36,8 +37,10 @@ struct BackendlessSignInUser {
     QString userToken;
 
     BackendlessSignInUser(
-        QString _userToken
-    ): userToken(_userToken) { }
+        QJsonObject jsonObject
+    ): userToken(jsonObject["user-token"].toString()) {
+
+    }
 };
 
 #endif
