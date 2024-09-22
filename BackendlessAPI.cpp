@@ -51,8 +51,8 @@ void BackendlessAPI::deleteItemFromTable(QString tableName, QString objectId) {
             qDebug() << replyValue;
             extractResult<DeletionResult>(
                 replyValue,
-                [&](auto user) {
-                    emit deleteItemFromTableSuccess(user);
+                [&](auto result) {
+                    emit deleteItemFromTableSuccess(result);
                 },
                 [&](auto beError) {
                     emit deleteItemFromTableError(beError);

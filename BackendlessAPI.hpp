@@ -18,7 +18,7 @@
 struct DeletionResult {
     long deletionTime;
 
-    DeletionResult(QJsonObject jsonObject): deletionTime(jsonObject["deletionTime"].toInteger())
+    DeletionResult(QJsonObject jsonObject): deletionTime(jsonObject["deletionTime"].toInteger()) { }
 };
 
 class BackendlessAPI: public QObject, public BasicAPI {
@@ -33,12 +33,12 @@ public:
 signals:
     void itemAdded();
     void deleteItemFromTableSuccess(DeletionResult);
-    void deleteItemFromTableError(BackendlessErrorCode);
+    void deleteItemFromTableError(BackendlessError);
 #ifdef BACKENDLESS_VARIANT_RESPONSE
 
 #else
     void loadTableItemsSuccess(QString);
-    void loadTableItemsError(BackendlessErrorCode);
+    void loadTableItemsError(BackendlessError);
 #endif
 
 public:
