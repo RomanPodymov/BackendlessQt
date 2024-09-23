@@ -29,6 +29,10 @@ public:
     void validateUserToken();
     void restorePassword(QString);
 
+private:
+    void readTokenFromDisk();
+    void saveTokenOnDisk();
+
 signals:
     void registerUserResult();
 

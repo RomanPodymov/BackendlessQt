@@ -12,6 +12,8 @@
 #include <QNetworkReply>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QStandardPaths>
+#include <QFile>
 #include "BackendlessUserAPI.hpp"
 
 BackendlessUserAPI::BackendlessUserAPI(QNetworkAccessManager* _networkAccessManager, QString _appId, QString _apiKey, QString _endpoint): QObject(),
@@ -19,7 +21,8 @@ BackendlessUserAPI::BackendlessUserAPI(QNetworkAccessManager* _networkAccessMana
     appId(_appId),
     apiKey(_apiKey),
     endpoint(_endpoint) {
-
+    readTokenFromDisk();
+    qDebug() << userToken;
 }
 
 void BackendlessUserAPI::registerUser(BackendlessRegisterUserRepresentable& user) {
@@ -69,6 +72,8 @@ void BackendlessUserAPI::signInUser(QString login, QString password) {
             extractResult<BackendlessSignInUser>(
                 replyValue,
                 [&](auto user) {
+                    userToken = user.userToken;
+                    saveTokenOnDisk();
                     emit signInUserSuccess(user);
                 },
                 [&](auto beError) {
@@ -81,6 +86,28 @@ void BackendlessUserAPI::signInUser(QString login, QString password) {
             #endif
         }
     );
+}
+
+void BackendlessUserAPI::readTokenFromDisk() {
+    auto path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    auto fileName = path + "/backendless_token.txt";
+    QFile file(fileName);
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream stream(&file);
+        stream >> userToken;
+    }
+    file.close();
+}
+
+void BackendlessUserAPI::saveTokenOnDisk() {
+    auto path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    auto fileName = path + "/backendless_token.txt";
+    QFile file(fileName);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream stream(&file);
+        stream << userToken;
+    }
+    file.close();
 }
 
 void BackendlessUserAPI::validateUserToken() {
