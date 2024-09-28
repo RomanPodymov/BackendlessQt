@@ -22,7 +22,7 @@ BackendlessAPI::BackendlessAPI(QString _appId, QString _apiKey, QString _endpoin
 
 }
 
-void BackendlessAPI::addItemToTable(QString tableName, QMap<QString, QString> params) {
+void BackendlessAPI::addItemToTable(QString tableName, PostParams params) {
     request(
         &networkAccessManager,
         this,
