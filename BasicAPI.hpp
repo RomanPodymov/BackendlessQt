@@ -14,6 +14,38 @@
 #include <QNetworkAccessManager>
 #include <QJsonObject>
 
+class PostParam {
+public:
+    virtual ~PostParam() = default;
+    virtual QString asParam() = 0;
+};
+
+typedef QMap<QString, PostParam*> PostParams;
+
+class StringPostParam: public PostParam {
+public:
+    StringPostParam(QString _value): value(_value) { }
+
+    QString asParam() override {
+        return "\"" + value + "\"";
+    }
+
+private:
+    QString value;
+};
+
+class IntPostParam: public PostParam {
+public:
+    IntPostParam(int _value): value(_value) { }
+
+    QString asParam() override {
+        return QString::number(value);
+    }
+
+private:
+    int value;
+};
+
 enum class BackendlessErrorCode {
     noError = 0,
     entityNotFound = 1000,
@@ -84,7 +116,7 @@ protected:
         QNetworkAccessManager*,
         const QObject*,
         QString,
-        QMap<QString, QString>,
+        PostParams,
         BERequestMethod,
         std::function<void(QNetworkReply*)> const&
     );
