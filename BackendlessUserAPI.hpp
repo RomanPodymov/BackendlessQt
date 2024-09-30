@@ -28,6 +28,12 @@ public:
     void signInUser(QString, QString);
     void validateUserToken();
     void restorePassword(QString);
+    QString userToken();
+
+private:
+    QString tokenFilePath();
+    void readTokenFromDisk();
+    void saveTokenOnDisk();
 
 signals:
     void registerUserResult();
@@ -54,7 +60,7 @@ private:
     QString appId;
     QString apiKey;
     QString endpoint;
-    QString userToken;
+    QString userTokenValue;
 };
 
 #endif
