@@ -45,7 +45,7 @@ void BackendlessAPI::deleteItemFromTable(QString tableName, QString objectId) {
 
         },
         BERequestMethod::deleteResource,
-        [&](QString replyValue){
+        [&](QByteArray replyValue){
             qDebug() << replyValue;
             extractResult<DeletionResult>(
                 replyValue,

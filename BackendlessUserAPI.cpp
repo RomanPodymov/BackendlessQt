@@ -32,7 +32,7 @@ void BackendlessUserAPI::registerUser(BackendlessRegisterUserRepresentable& user
         endpoint + appId + "/" + apiKey + "/users/register",
         user.getAllParams(),
         BERequestMethod::post,
-        [&](QString replyValue){
+        [&](QByteArray replyValue){
             qDebug() << replyValue;
 
             emit registerUserResult();
@@ -50,7 +50,7 @@ void BackendlessUserAPI::signInUser(QString login, QString password) {
             {"password", new StringPostParam(password)}
         },
         BERequestMethod::post,
-        [&](QString replyValue){
+        [&](QByteArray replyValue){
             qDebug() << replyValue;
 
             #ifdef BACKENDLESS_VARIANT_RESPONSE
@@ -118,7 +118,7 @@ void BackendlessUserAPI::validateUserToken() {
 
         },
         BERequestMethod::get,
-        [&](QString replyValue) {
+        [&](QByteArray replyValue) {
             qDebug() << replyValue;
 
             #ifdef BACKENDLESS_VARIANT_RESPONSE
@@ -151,7 +151,7 @@ void BackendlessUserAPI::restorePassword(QString email) {
 
         },
         BERequestMethod::get,
-        [&](QString replyValue){
+        [&](QByteArray replyValue){
             qDebug() << replyValue;
 
             emit restorePasswordSuccess(replyValue);
