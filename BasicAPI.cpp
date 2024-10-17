@@ -20,7 +20,7 @@ void BasicAPI::request(
     QString urlString,
     PostParams customParams,
     BERequestMethod method,
-    std::function<void(QNetworkReply*)> const& handleRequest
+    std::function<void(QByteArray)> const& handleRequest
 ) {
     QUrl url(urlString);
     QNetworkRequest request(url);
@@ -42,7 +42,7 @@ void BasicAPI::request(
     params += "}";
 
     QObject::connect(networkAccessManager, &QNetworkAccessManager::finished, context, [handleRequest](QNetworkReply* reply) {
-        handleRequest(reply);
+        handleRequest(reply->readAll());
     }, Qt::SingleShotConnection);
     switch (method) {
     case BERequestMethod::get:
