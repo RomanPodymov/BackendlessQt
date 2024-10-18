@@ -67,7 +67,7 @@ void BackendlessAPI::loadTableItems(QString tableName) {
     request(
         &networkAccessManager,
         this,
-        endpoint + appId + "/" + apiKey + "/data/" + tableName,
+        endpoint + appId + "/" + apiKey + "/data/" + tableName + "?pageSize=100",
         {
 
         },
