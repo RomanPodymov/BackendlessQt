@@ -111,7 +111,13 @@ enum class BERequestMethod {
     deleteResource
 };
 
-class AnyNetworkAccessManager;
+class AnyNetworkAccessManager {
+public:
+    virtual void get(QString, const QObject* context, std::function<void(QByteArray)> const&) = 0;
+    virtual void post(QString, QString, const QObject* context, std::function<void(QByteArray)> const&) = 0;
+    virtual void put(QString, QString, const QObject* context, std::function<void(QByteArray)> const&) = 0;
+    virtual void deleteResource(QString, const QObject* context, std::function<void(QByteArray)> const&) = 0;
+};
 
 class BasicAPI {
 protected:

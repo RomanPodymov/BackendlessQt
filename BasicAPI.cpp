@@ -58,5 +58,7 @@ void BasicAPI::request(
         networkAccessManager->put(request, params.toUtf8());
         break;
     }*/
+
+    networkAccessManager->get(urlString, context, handleRequest);
 }
 

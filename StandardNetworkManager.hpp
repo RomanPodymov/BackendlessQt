@@ -9,22 +9,20 @@
 #ifndef STANDARD_NETWORK_MANAGER_H
 #define STANDARD_NETWORK_MANAGER_H
 
+#include "BasicAPI.hpp"
 #include <QString>
 #include <QByteArray>
-
-class AnyNetworkAccessManager {
-    virtual void get(QString, std::function<void(QByteArray)> const&) = 0;
-    virtual void post(QString, QString, std::function<void(QByteArray)> const&) = 0;
-    virtual void put(QString, QString, std::function<void(QByteArray)> const&) = 0;
-    virtual void deleteResource(QString, std::function<void(QByteArray)> const&) = 0;
-};
+#include <QNetworkAccessManager>
 
 class StandardNetworkManager: public AnyNetworkAccessManager {
 public:
-    void get(QString, std::function<void(QByteArray)> const&);
-    void post(QString, QString, std::function<void(QByteArray)> const&);
-    void put(QString, QString, std::function<void(QByteArray)> const&);
-    void deleteResource(QString, std::function<void(QByteArray)> const&);
+    void get(QString, const QObject* context, std::function<void(QByteArray)> const&) override;
+    void post(QString, QString, const QObject* context, std::function<void(QByteArray)> const&) override;
+    void put(QString, QString, const QObject* context, std::function<void(QByteArray)> const&) override;
+    void deleteResource(QString, const QObject* context, std::function<void(QByteArray)> const&) override;
+
+private:
+    QNetworkAccessManager manager;
 };
 
 #endif
