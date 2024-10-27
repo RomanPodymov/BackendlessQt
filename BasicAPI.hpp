@@ -13,6 +13,7 @@
 #include <QMap>
 #include <QNetworkAccessManager>
 #include <QJsonObject>
+#include <QJsonParseError>
 
 class PostParam {
 public:
@@ -110,10 +111,12 @@ enum class BERequestMethod {
     deleteResource
 };
 
+class AnyNetworkAccessManager;
+
 class BasicAPI {
 protected:
     void request(
-        QNetworkAccessManager*,
+        AnyNetworkAccessManager*,
         const QObject*,
         QString,
         PostParams,

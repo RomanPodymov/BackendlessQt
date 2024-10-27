@@ -15,14 +15,14 @@
 #include "BasicAPI.hpp"
 
 void BasicAPI::request(
-    QNetworkAccessManager* networkAccessManager,
+    AnyNetworkAccessManager* networkAccessManager,
     const QObject* context,
     QString urlString,
     PostParams customParams,
     BERequestMethod method,
     std::function<void(QByteArray)> const& handleRequest
 ) {
-    QUrl url(urlString);
+    /*QUrl url(urlString);
     QNetworkRequest request(url);
 
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
@@ -41,7 +41,7 @@ void BasicAPI::request(
     params.removeLast();
     params += "}";
 
-    QObject::connect(networkAccessManager, &QNetworkAccessManager::finished, context, [handleRequest](QNetworkReply* reply) {
+    QObject::connect(networkAccessManager, &QNetworkAccessManager::finished, context, [handleRequest](auto reply) {
         handleRequest(reply->readAll());
     }, Qt::SingleShotConnection);
     switch (method) {
@@ -57,6 +57,6 @@ void BasicAPI::request(
     case BERequestMethod::put:
         networkAccessManager->put(request, params.toUtf8());
         break;
-    }
+    }*/
 }
 
