@@ -115,7 +115,7 @@ class AnyNetworkAccessManager {
 public:
     virtual void get(QString, const QObject*, std::function<void(QByteArray)> const&) = 0;
     virtual void post(QString, PostParams, const QObject*, std::function<void(QByteArray)> const&) = 0;
-    virtual void put(QString, QString, const QObject*, std::function<void(QByteArray)> const&) = 0;
+    virtual void put(QString, PostParams, const QObject*, std::function<void(QByteArray)> const&) = 0;
     virtual void deleteResource(QString, const QObject*, std::function<void(QByteArray)> const&) = 0;
 };
 

@@ -18,7 +18,7 @@ class StandardNetworkManager: public AnyNetworkAccessManager {
 public:
     void get(QString, const QObject*, std::function<void(QByteArray)> const&) override;
     void post(QString, PostParams, const QObject*, std::function<void(QByteArray)> const&) override;
-    void put(QString, QString, const QObject* context, std::function<void(QByteArray)> const&) override;
+    void put(QString, PostParams, const QObject* context, std::function<void(QByteArray)> const&) override;
     void deleteResource(QString, const QObject* context, std::function<void(QByteArray)> const&) override;
 
 private:
