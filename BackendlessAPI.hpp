@@ -31,6 +31,7 @@ public:
     void addItemToTable(QString, PostParams);
     void deleteItemFromTable(QString, QString);
     void loadTableItems(QString tableName, int pageSize = 100, int offset = 0);
+    void getItemsCount(QString);
 
 signals:
     void itemAdded();
@@ -42,6 +43,7 @@ signals:
     void loadTableItemsSuccess(QString);
     void loadTableItemsError(BackendlessError);
 #endif
+    void getItemsCountSuccess(int);
 
 public:
     BackendlessUserAPI userAPI;

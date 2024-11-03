@@ -83,3 +83,20 @@ void BackendlessAPI::loadTableItems(QString tableName, int pageSize, int offset)
         }
     );
 }
+
+void BackendlessAPI::getItemsCount(QString tableName) {
+    request(
+        networkAccessManager,
+        this,
+        endpoint + appId + "/" + apiKey + "/data/" + tableName + "/count",
+        {
+
+        },
+        BERequestMethod::get,
+        [&](auto replyValue){
+            qDebug() << replyValue;
+
+            emit getItemsCountSuccess(replyValue.toInt());
+        }
+    );
+}
