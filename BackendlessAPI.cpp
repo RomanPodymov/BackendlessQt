@@ -6,6 +6,7 @@
 //  Copyright © 2024 BackendlessQt. All rights reserved.
 //
 
+#include <QtConcurrent>
 #include <QNetworkAccessManager>
 #include <QUrlQuery>
 #include <QNetworkRequest>
@@ -84,6 +85,14 @@ void BackendlessAPI::loadTableItems(QString tableName, int pageSize, int offset)
     );
 }
 
+void BackendlessAPI::loadAllTableItems(QString tableName) {
+    QObject::connect(this, &BackendlessAPI::getItemsCountSuccess, this, [&](auto replyValue){
+        this->loadTableItems("Accounts", replyValue, 0);
+    });
+
+    this->getItemsCount(tableName);
+}
+
 void BackendlessAPI::getItemsCount(QString tableName) {
     request(
         networkAccessManager,
@@ -99,4 +108,10 @@ void BackendlessAPI::getItemsCount(QString tableName) {
             emit getItemsCountSuccess(replyValue.toInt());
         }
     );
+}
+
+QFuture<int> BackendlessAPI::getItemsCountFuture() {
+    QtConcurrent::run([=]() -> int {
+
+    });
 }

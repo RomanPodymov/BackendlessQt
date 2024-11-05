@@ -13,6 +13,7 @@
 #include <QMap>
 #include <QJsonObject>
 #include <QNetworkAccessManager>
+#include <QFuture>
 #include "BackendlessUserAPI.hpp"
 
 struct DeletionResult {
@@ -31,12 +32,15 @@ public:
     void addItemToTable(QString, PostParams);
     void deleteItemFromTable(QString, QString);
     void loadTableItems(QString tableName, int pageSize = 100, int offset = 0);
+    void loadAllTableItems(QString tableName);
     void getItemsCount(QString);
+    QFuture<int> getItemsCountFuture();
 
 signals:
     void itemAdded();
     void deleteItemFromTableSuccess(DeletionResult);
     void deleteItemFromTableError(BackendlessError);
+    void loadAllTableItemsSuccess(QString);
 #ifdef BACKENDLESS_VARIANT_RESPONSE
 
 #else
