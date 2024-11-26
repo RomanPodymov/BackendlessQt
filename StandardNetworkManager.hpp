@@ -16,10 +16,14 @@
 
 class StandardNetworkManager: public AnyNetworkAccessManager {
 public:
+    StandardNetworkManager(QObject* parent): manager(parent) { }
+
     void get(QString, const QObject*, std::function<void(QByteArray)> const&) override;
     void post(QString, PostParams, const QObject*, std::function<void(QByteArray)> const&) override;
     void put(QString, PostParams, const QObject* context, std::function<void(QByteArray)> const&) override;
     void deleteResource(QString, const QObject* context, std::function<void(QByteArray)> const&) override;
+
+    QFuture<QByteArray> get(QString);
 
 private:
     QNetworkAccessManager manager;

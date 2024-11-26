@@ -14,6 +14,7 @@
 #include <QNetworkAccessManager>
 #include <QJsonObject>
 #include <QJsonParseError>
+#include <QFuture>
 
 class PostParam {
 public:
@@ -117,6 +118,8 @@ public:
     virtual void post(QString, PostParams, const QObject*, std::function<void(QByteArray)> const&) = 0;
     virtual void put(QString, PostParams, const QObject*, std::function<void(QByteArray)> const&) = 0;
     virtual void deleteResource(QString, const QObject*, std::function<void(QByteArray)> const&) = 0;
+
+    virtual QFuture<QByteArray> get(QString) = 0;
 };
 
 class BasicAPI {

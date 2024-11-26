@@ -85,3 +85,19 @@ void StandardNetworkManager::deleteResource(QString urlString, const QObject* co
     }, Qt::SingleShotConnection);
     manager.deleteResource(request);
 }
+
+QFuture<QByteArray> StandardNetworkManager::get(QString urlString) {
+    QUrl url(urlString);
+    QNetworkRequest request(url);
+
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    auto result = QtFuture::connect(&manager, &QNetworkAccessManager::finished)
+        .then ([](QNetworkReply* reply) {
+            return reply->readAll();
+        });
+
+    manager.get(request);
+
+    return result;
+}

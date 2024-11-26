@@ -110,8 +110,10 @@ void BackendlessAPI::getItemsCount(QString tableName) {
     );
 }
 
-QFuture<int> BackendlessAPI::getItemsCountFuture() {
-    QtConcurrent::run([=]() -> int {
-
-    });
+QFuture<int> BackendlessAPI::getItemsCountFuture(QString tableName) {
+    auto url = endpoint + appId + "/" + apiKey + "/data/" + tableName + "/count";
+    return networkAccessManager->get(url)
+        .then([](QString replyValue){
+            return replyValue.toInt();
+        });
 }

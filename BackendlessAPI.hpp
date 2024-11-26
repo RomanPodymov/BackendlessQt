@@ -34,7 +34,7 @@ public:
     void loadTableItems(QString tableName, int pageSize = 100, int offset = 0);
     void loadAllTableItems(QString);
     void getItemsCount(QString);
-    QFuture<int> getItemsCountFuture();
+    QFuture<int> getItemsCountFuture(QString);
 
 signals:
     void itemAdded();
