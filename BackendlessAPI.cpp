@@ -64,11 +64,11 @@ void BackendlessAPI::deleteItemFromTable(QString tableName, QString objectId) {
     );
 }
 
-void BackendlessAPI::loadTableItems(QString tableName, int pageSize, int offset) {
+void BackendlessAPI::loadTableItems(QString tableName, int pageSize, int offset, QString whereClause) {
     request(
         networkAccessManager,
         this,
-        endpoint + appId + "/" + apiKey + "/data/" + tableName + "?pageSize=" + QString::number(pageSize) + "&offset=" + QString::number(offset),
+        endpoint + appId + "/" + apiKey + "/data/" + tableName + "?pageSize=" + QString::number(pageSize) + "&offset=" + QString::number(offset) + "&where" + whereClause,
         {
 
         },
