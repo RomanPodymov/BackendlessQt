@@ -113,10 +113,10 @@ enum class BERequestMethod {
 
 class AnyNetworkAccessManager {
 public:
-    virtual void get(QString, const QObject*, std::function<void(QByteArray)> const&) = 0;
-    virtual void post(QString, PostParams, const QObject*, std::function<void(QByteArray)> const&) = 0;
-    virtual void put(QString, PostParams, const QObject*, std::function<void(QByteArray)> const&) = 0;
-    virtual void deleteResource(QString, const QObject*, std::function<void(QByteArray)> const&) = 0;
+    virtual void get(QString, const QObject*, QMap<QString, QString>, std::function<void(QByteArray)> const&) = 0;
+    virtual void post(QString, PostParams, const QObject*, QMap<QString, QString>, std::function<void(QByteArray)> const&) = 0;
+    virtual void put(QString, PostParams, const QObject*, QMap<QString, QString>, std::function<void(QByteArray)> const&) = 0;
+    virtual void deleteResource(QString, const QObject*, QMap<QString, QString>, std::function<void(QByteArray)> const&) = 0;
 };
 
 class BasicAPI {
@@ -127,6 +127,7 @@ protected:
         QString,
         PostParams,
         BERequestMethod,
+        QMap<QString, QString>,
         std::function<void(QByteArray)> const&
     );
 };

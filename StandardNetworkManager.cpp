@@ -10,11 +10,12 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
-void StandardNetworkManager::get(QString urlString, const QObject* context, std::function<void(QByteArray)> const& handleRequest) {
+void StandardNetworkManager::get(QString urlString, const QObject* context, QMap<QString, QString>, std::function<void(QByteArray)> const& handleRequest) {
     QUrl url(urlString);
     QNetworkRequest request(url);
 
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setRawHeader("user-token", "");
 
     QObject::connect(&manager, &QNetworkAccessManager::finished, context, [handleRequest](auto reply) {
         handleRequest(reply->readAll());
@@ -22,7 +23,7 @@ void StandardNetworkManager::get(QString urlString, const QObject* context, std:
     manager.get(request);
 }
 
-void StandardNetworkManager::post(QString urlString, PostParams customParams, const QObject* context, std::function<void(QByteArray)> const& handleRequest) {
+void StandardNetworkManager::post(QString urlString, PostParams customParams, const QObject* context, QMap<QString, QString>, std::function<void(QByteArray)> const& handleRequest) {
     QUrl url(urlString);
     QNetworkRequest request(url);
 
@@ -48,7 +49,7 @@ void StandardNetworkManager::post(QString urlString, PostParams customParams, co
     manager.post(request, params.toUtf8());
 }
 
-void StandardNetworkManager::put(QString urlString, PostParams customParams, const QObject* context, std::function<void(QByteArray)> const& handleRequest) {
+void StandardNetworkManager::put(QString urlString, PostParams customParams, const QObject* context, QMap<QString, QString>, std::function<void(QByteArray)> const& handleRequest) {
     QUrl url(urlString);
     QNetworkRequest request(url);
 
@@ -74,7 +75,7 @@ void StandardNetworkManager::put(QString urlString, PostParams customParams, con
     manager.put(request, params.toUtf8());
 }
 
-void StandardNetworkManager::deleteResource(QString urlString, const QObject* context, std::function<void(QByteArray)> const& handleRequest) {
+void StandardNetworkManager::deleteResource(QString urlString, const QObject* context, QMap<QString, QString>, std::function<void(QByteArray)> const& handleRequest) {
     QUrl url(urlString);
     QNetworkRequest request(url);
 

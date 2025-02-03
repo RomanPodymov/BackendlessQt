@@ -30,6 +30,7 @@ public:
     void signInUser(QString, QString);
     void validateUserToken();
     void restorePassword(QString);
+    void logout();
     QString userToken();
 
 private:
