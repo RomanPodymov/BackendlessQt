@@ -25,16 +25,16 @@ void BasicAPI::request(
 ) {
     switch (method) {
     case BERequestMethod::get:
-        networkAccessManager->get(urlString, context, headers, handleRequest);
+        networkAccessManager->get(urlString, headers, context, handleRequest);
         break;
     case BERequestMethod::post:
-        networkAccessManager->post(urlString, customParams, context, headers, handleRequest);
+        networkAccessManager->post(urlString, headers, customParams, context, handleRequest);
         break;
     case BERequestMethod::deleteResource:
-        networkAccessManager->deleteResource(urlString, context, headers, handleRequest);
+        networkAccessManager->deleteResource(urlString, headers, context, handleRequest);
         break;
     case BERequestMethod::put:
-        networkAccessManager->put(urlString, customParams, context, headers, handleRequest);
+        networkAccessManager->put(urlString, headers, customParams, context, handleRequest);
         break;
     }
 }

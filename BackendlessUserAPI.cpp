@@ -172,7 +172,7 @@ void BackendlessUserAPI::logout() {
 
         },
         BERequestMethod::get,
-        {{"token", this->userTokenValue}},
+        {{"user-token", this->userTokenValue}},
         [&](auto replyValue){
             qDebug() << replyValue;
 
