@@ -111,6 +111,11 @@ void BackendlessUserAPI::saveTokenOnDisk() {
     file.close();
 }
 
+void BackendlessUserAPI::removeTokenFromDisk() {
+    QFile file(tokenFilePath());
+    file.remove();
+}
+
 void BackendlessUserAPI::validateUserToken() {
     request(
         networkAccessManager,
@@ -172,9 +177,12 @@ void BackendlessUserAPI::logout() {
 
         },
         BERequestMethod::get,
-        {{"user-token", this->userTokenValue}},
+        {{"user-token", userTokenValue}},
         [&](auto replyValue){
             qDebug() << replyValue;
+
+            userTokenValue = "";
+            removeTokenFromDisk();
 
             emit restorePasswordSuccess(replyValue);
         }

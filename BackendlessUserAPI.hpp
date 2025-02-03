@@ -37,6 +37,7 @@ private:
     QString tokenFilePath();
     void readTokenFromDisk();
     void saveTokenOnDisk();
+    void removeTokenFromDisk();
 
 signals:
     void registerUserResult();
