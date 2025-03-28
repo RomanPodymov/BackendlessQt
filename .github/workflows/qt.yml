@@ -21,15 +21,7 @@ jobs:
              qmake BackendlessQt.pro
              make -j12
 
-      - name: Change directory
-        run: |
-             cd Tests
-             
-      - name: List files
-        run: |
-             ls -a
-
       - name: Compile tests
         run: |
-             qmake BackendlessQtTests.pro
+             qmake Tests/BackendlessQtTests.pro
              make -j12
