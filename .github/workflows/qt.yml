@@ -24,6 +24,10 @@ jobs:
       - name: Change directory
         run: |
              cd Tests
+             
+      - name: List files
+        run: |
+             ls -a
 
       - name: Compile tests
         run: |
