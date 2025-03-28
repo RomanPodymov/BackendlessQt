@@ -18,5 +18,5 @@ jobs:
 
       - name: Compile
         run: |
-             qmake FinanceTracker.pro
+             qmake BackendlessQt.pro
              make -j12
