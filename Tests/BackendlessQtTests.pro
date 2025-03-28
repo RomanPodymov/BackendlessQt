@@ -1,10 +1,24 @@
 QT += testlib
 
-CONFIG += core gui network widgets qt testcase c++20 warn_on
+CONFIG += core gui widgets qt testcase c++20 warn_on
+
+QT += network
 
 TEMPLATE = app
 
 SOURCES += \
     test.cpp
 
-#HEADERS += \
+SOURCES += \
+    ../BasicAPI.cpp \
+    ../BackendlessAPI.cpp \
+    ../BackendlessUserAPI.cpp \
+    ../BackendlessUser.cpp \
+    ../StandardNetworkManager.cpp
+
+HEADERS += \
+    ../BasicAPI.hpp \
+    ../BackendlessAPI.hpp \
+    ../BackendlessUserAPI.hpp \
+    ../BackendlessUser.hpp \
+    ../StandardNetworkManager.hpp

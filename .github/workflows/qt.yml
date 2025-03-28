@@ -2,7 +2,7 @@ name: QT
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "feature/tests" ]
 
 jobs:
   build-linux:
@@ -20,3 +20,12 @@ jobs:
         run: |
              qmake BackendlessQt.pro
              make -j12
+
+      - name: Cd
+        run: |
+             cd Tests
+            
+     - name: Compile
+       run: |
+            qmake BackendlessQtTests.pro
+            make -j12

@@ -1,5 +1,6 @@
 #include <QtTest>
 #include <QSignalSpy>
+#include "../BackendlessAPI.hpp"
 
 class BackendlessQtTests: public QObject {
     Q_OBJECT
@@ -22,7 +23,14 @@ BackendlessQtTests::~BackendlessQtTests() {
 
 }
 
+void BackendlessQtTests::initTestCase() {
+
+}
+
 void BackendlessQtTests::test() {
+    //BackendlessAPI some(nullptr, "", "", "");
+    //some.addItemToTable("", PostParams());
+
     QVERIFY(true);
     QCOMPARE(1, 1);
 }
