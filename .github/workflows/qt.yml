@@ -2,7 +2,7 @@ name: QT
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "feature/tests" ]
 
 jobs:
   build-linux:
