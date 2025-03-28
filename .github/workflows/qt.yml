@@ -21,10 +21,6 @@ jobs:
              qmake BackendlessQt.pro
              make -j12
 
-      - name: cd
-        run: |
-             cd Tests
-
      - name: Compile tests
        run: |
             qmake BackendlessQtTests.pro
