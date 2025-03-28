@@ -32,7 +32,7 @@ void BackendlessQtTests::test() {
     //some.addItemToTable("", PostParams());
 
     QVERIFY(true);
-    QCOMPARE(1, 1);
+    QCOMPARE(1, 2);
 }
 
 void BackendlessQtTests::cleanupTestCase() {
