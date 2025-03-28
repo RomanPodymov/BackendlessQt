@@ -24,3 +24,8 @@ jobs:
       - name: Change directory
         run: |
              cd Tests
+
+      - name: Compile tests
+        run: |
+             qmake BackendlessQtTests.pro
+             make -j12
