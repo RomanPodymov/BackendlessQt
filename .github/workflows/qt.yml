@@ -1,12 +1,12 @@
 name: QT
 
 on:
-  push:
+  pull_request:
     branches: [ "main" ]
 
 jobs:
-  build-linux:
-    runs-on: ubuntu-latest
+  build-mac:
+    runs-on: macos-latest
     steps:
       - name: Checkout repository and submodules
         uses: actions/checkout@v4
@@ -14,9 +14,29 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: '6.8.2'
-
+          version: '6.9.0'
+          cache: true
+        
       - name: Compile
         run: |
              qmake BackendlessQt.pro
              make -j12
+
+      - name: Compile and run tests
+        run: |
+             qmake Tests/BackendlessQtTests.pro
+             make -j12
+             open BackendlessQtTests.app --args -o ${{ github.workspace }}/test_report.xml -xml
+         
+      - name: Parse test results
+        id: getxml
+        uses: mavrosxristoforos/get-xml-info@2.0
+        continue-on-error: true
+        with:
+          xml-file: 'test_report.xml'
+          xpath: '/TestCase//TestFunction/Incident[@type=''fail'']'
+
+      - name: Check on failures
+        if: steps.getxml.outcome == 'success'
+        run: |
+             exit 1
