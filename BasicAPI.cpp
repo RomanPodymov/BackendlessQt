@@ -15,41 +15,27 @@
 #include "BasicAPI.hpp"
 
 void BasicAPI::request(
-    QNetworkAccessManager* networkAccessManager,
+    AnyNetworkAccessManager* networkAccessManager,
     const QObject* context,
     QString urlString,
-    QMap<QString, QString> customParams,
-    bool isPost,
-    std::function<void(QNetworkReply*)> const& handleRequest
+    PostParams customParams,
+    BERequestMethod method,
+    QMap<QString, QString> headers,
+    std::function<void(QByteArray)> const& handleRequest
 ) {
-    QUrl url(urlString);
-    QNetworkRequest request(url);
-
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-
-    QString params = "{";
-
-    for (auto [key, value] : customParams.asKeyValueRange()) {
-        params += "\"";
-        params += key;
-        params += "\"";
-        params += ":";
-        params += "\"";
-        params += value;
-        params += "\"";
-        params += ",";
-    }
-
-    params.removeLast();
-    params += "}";
-
-    QObject::connect(networkAccessManager, &QNetworkAccessManager::finished, context, [handleRequest](QNetworkReply* reply) {
-        handleRequest(reply);
-    }, Qt::SingleShotConnection);
-    if (isPost) {
-        networkAccessManager->post(request, params.toUtf8());
-    } else {
-        networkAccessManager->get(request);
+    switch (method) {
+    case BERequestMethod::get:
+        networkAccessManager->get(urlString, headers, context, handleRequest);
+        break;
+    case BERequestMethod::post:
+        networkAccessManager->post(urlString, headers, customParams, context, handleRequest);
+        break;
+    case BERequestMethod::deleteResource:
+        networkAccessManager->deleteResource(urlString, headers, context, handleRequest);
+        break;
+    case BERequestMethod::put:
+        networkAccessManager->put(urlString, headers, customParams, context, handleRequest);
+        break;
     }
 }
 

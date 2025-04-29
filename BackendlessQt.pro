@@ -13,14 +13,20 @@ SOURCES += \
     BasicAPI.cpp \
     BackendlessAPI.cpp \
     BackendlessUserAPI.cpp \
-    BackendlessUser.cpp
+    BackendlessUser.cpp \
+    StandardNetworkManager.cpp
 
 HEADERS += \
     BasicAPI.hpp \
     BackendlessAPI.hpp \
     BackendlessUserAPI.hpp \
+<<<<<<< HEAD
     BackendlessUser.hpp
 
 !android {
     CONFIG += staticlib
 }
+=======
+    BackendlessUser.hpp \
+    StandardNetworkManager.hpp
+>>>>>>> main
