@@ -31,8 +31,12 @@ public:
     BackendlessAPI(AnyNetworkAccessManager* _networkAccessManager, QString _appId, QString _apiKey, QString _endpoint = "https://eu-api.backendless.com/");
     void addItemToTable(QString, PostParams);
     void deleteItemFromTable(QString, QString);
+<<<<<<< HEAD
     void loadTableItems(QString tableName, int pageSize = 100, int offset = 0);
     void loadAllTableItems(QString);
+=======
+    void loadTableItems(QString tableName, int pageSize = 100, int offset = 0, QString whereClause = "");
+>>>>>>> main
     void getItemsCount(QString);
     QFuture<int> getItemsCountFuture(QString);
 
