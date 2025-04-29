@@ -48,6 +48,8 @@ private:
     T value;
 };
 
+typedef NumericPostParam<int> IntPostParam;
+
 enum class BackendlessErrorCode {
     noError = 0,
     entityNotFound = 1000,
