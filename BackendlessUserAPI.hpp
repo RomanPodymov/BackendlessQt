@@ -23,6 +23,8 @@ class AnyNetworkAccessManager;
 class BackendlessUserAPI: public QObject, public BasicAPI {
     Q_OBJECT
 
+    friend class BackendlessQtTests;
+
 public:
     BackendlessUserAPI(AnyNetworkAccessManager*, QString _appId, QString _apiKey, QString _endpoint = "https://eu-api.backendless.com/");
 
@@ -36,7 +38,7 @@ public:
 private:
     QString tokenFilePath();
     void readTokenFromDisk();
-    void saveTokenOnDisk();
+    void saveTokenOnDisk(QString additionalValue = "");
     void removeTokenFromDisk();
 
 signals:

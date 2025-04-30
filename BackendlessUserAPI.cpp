@@ -102,11 +102,11 @@ void BackendlessUserAPI::readTokenFromDisk() {
     file.close();
 }
 
-void BackendlessUserAPI::saveTokenOnDisk() {
+void BackendlessUserAPI::saveTokenOnDisk(QString additionalValue) {
     QFile file(tokenFilePath());
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QTextStream stream(&file);
-        stream << userTokenValue;
+        stream << (additionalValue.isEmpty() ? userTokenValue : additionalValue);
     }
     file.close();
 }
