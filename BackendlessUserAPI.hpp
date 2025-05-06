@@ -66,7 +66,7 @@ private:
     QString appId;
     QString apiKey;
     QString endpoint;
-    QString userTokenValue;
+    BackendlessSignInUser userValue;
 };
 
 #endif

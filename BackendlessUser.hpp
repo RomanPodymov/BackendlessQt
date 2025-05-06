@@ -44,6 +44,8 @@ struct BackendlessSignInUser {
     ): userToken(jsonObject["user-token"].toString()) {
 
     }
+
+    BackendlessSignInUser(): userToken("") {}
 };
 
 #endif
