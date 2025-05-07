@@ -29,11 +29,11 @@ public:
     BackendlessUserAPI(AnyNetworkAccessManager*, QString _appId, QString _apiKey, QString _endpoint = "https://eu-api.backendless.com/");
 
     void registerUser(BackendlessRegisterUserRepresentable&);
-    void signInUser(QString, QString);
+    void signInUser(QString, QString, std::function<BackendlessSignInUser(QJsonObject)> const&);
     void validateUserToken();
     void restorePassword(QString);
     void logout();
-    QString userToken();
+    BackendlessSignInUser user();
 
 private:
     QString tokenFilePath();
