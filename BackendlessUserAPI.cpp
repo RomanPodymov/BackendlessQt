@@ -70,6 +70,9 @@ void BackendlessUserAPI::signInUser(QString login, QString password) {
             #else
             extractResult<BackendlessSignInUser>(
                 replyValue,
+                [&](auto bytes) {
+                    return BackendlessSignInUser(bytes);
+                },
                 [&](auto user) {
                     userValue = user;
                     saveTokenOnDisk();
