@@ -30,7 +30,7 @@ public:
     ~BackendlessUserAPI();
 
     void registerUser(BackendlessRegisterUserRepresentable&);
-    void signInUser(QString, QString, std::function<BackendlessSignInUser*(QJsonObject)> const&);
+    void signInUser(QString, QString, std::function<BackendlessSignInUser*(QJsonObject)>);
     void validateUserToken();
     void restorePassword(QString);
     void logout();

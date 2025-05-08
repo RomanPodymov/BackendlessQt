@@ -98,9 +98,6 @@ void extractResult(
             decoder(
                 jsonObject
             )
-            /*[](auto bytes){
-                return new T(bytes);
-            }*/
         );
         break;
     default:

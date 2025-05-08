@@ -45,7 +45,8 @@ void BackendlessUserAPI::registerUser(BackendlessRegisterUserRepresentable& user
     );
 }
 
-void BackendlessUserAPI::signInUser(QString login, QString password, std::function<BackendlessSignInUser*(QJsonObject)> const& decoder) {
+void BackendlessUserAPI::signInUser(QString login, QString password, std::function<BackendlessSignInUser*(QJsonObject)> decoder) {
+    auto closure = decoder;
     request(
         networkAccessManager,
         this,
@@ -75,7 +76,10 @@ void BackendlessUserAPI::signInUser(QString login, QString password, std::functi
             #else
             extractResult<BackendlessSignInUser>(
                 replyValue,
-                decoder,
+                /*[](auto bytes) {
+                    return new BackendlessSignInUser(bytes);
+                },*/
+                closure,
                 [&](auto user) {
                     userValue = user;
                     saveTokenOnDisk();
@@ -102,6 +106,7 @@ void BackendlessUserAPI::readTokenFromDisk() {
     QFile file(tokenFilePath());
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream stream(&file);
+        userValue = new BackendlessSignInUser();
         stream >> userValue->userToken;
     }
     file.close();
