@@ -74,8 +74,8 @@ struct BackendlessError {
 template<typename T>
 void extractResult(
     QByteArray replyValue,
-    std::function<T(QJsonObject)> const& decoder,
-    std::function<void(T)> const& onSuccess,
+    std::function<T*(QJsonObject)> const& decoder,
+    std::function<void(T*)> const& onSuccess,
     std::function<void(BackendlessError)> const& onBEError,
     std::function<void(QJsonParseError)> const& onJSONError
 ) {
@@ -98,6 +98,9 @@ void extractResult(
             decoder(
                 jsonObject
             )
+            /*[](auto bytes){
+                return new T(bytes);
+            }*/
         );
         break;
     default:

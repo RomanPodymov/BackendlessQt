@@ -20,8 +20,13 @@ BackendlessUserAPI::BackendlessUserAPI(AnyNetworkAccessManager* _networkAccessMa
     networkAccessManager(_networkAccessManager),
     appId(_appId),
     apiKey(_apiKey),
-    endpoint(_endpoint) {
+    endpoint(_endpoint),
+    userValue(nullptr) {
     readTokenFromDisk();
+}
+
+BackendlessUserAPI::~BackendlessUserAPI() {
+    delete userValue;
 }
 
 void BackendlessUserAPI::registerUser(BackendlessRegisterUserRepresentable& user) {
@@ -40,7 +45,7 @@ void BackendlessUserAPI::registerUser(BackendlessRegisterUserRepresentable& user
     );
 }
 
-void BackendlessUserAPI::signInUser(QString login, QString password, std::function<BackendlessSignInUser(QJsonObject)> const& decoder) {
+void BackendlessUserAPI::signInUser(QString login, QString password, std::function<BackendlessSignInUser*(QJsonObject)> const& decoder) {
     request(
         networkAccessManager,
         this,
@@ -70,9 +75,6 @@ void BackendlessUserAPI::signInUser(QString login, QString password, std::functi
             #else
             extractResult<BackendlessSignInUser>(
                 replyValue,
-                /*[&](auto bytes) {
-                    return BackendlessSignInUser(bytes);
-                },*/
                 decoder,
                 [&](auto user) {
                     userValue = user;
@@ -100,7 +102,7 @@ void BackendlessUserAPI::readTokenFromDisk() {
     QFile file(tokenFilePath());
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream stream(&file);
-        stream >> userValue.userToken;
+        stream >> userValue->userToken;
     }
     file.close();
 }
@@ -109,7 +111,7 @@ void BackendlessUserAPI::saveTokenOnDisk(QString additionalValue) {
     QFile file(tokenFilePath());
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QTextStream stream(&file);
-        stream << (additionalValue.isEmpty() ? userValue.userToken : additionalValue);
+        stream << (additionalValue.isEmpty() ? userValue->userToken : additionalValue);
     }
     file.close();
 }
@@ -123,7 +125,7 @@ void BackendlessUserAPI::validateUserToken() {
     request(
         networkAccessManager,
         this,
-        endpoint + appId + "/" + apiKey + "/users/isvalidusertoken/" + userValue.userToken,
+        endpoint + appId + "/" + apiKey + "/users/isvalidusertoken/" + userValue->userToken,
         {
 
         },
@@ -180,11 +182,12 @@ void BackendlessUserAPI::logout() {
 
         },
         BERequestMethod::get,
-        {{"user-token", userValue.userToken}},
+        {{"user-token", userValue->userToken}},
         [&](auto replyValue){
             qDebug() << replyValue;
 
-            userValue = BackendlessSignInUser();
+            delete userValue;
+            userValue = nullptr;
             removeTokenFromDisk();
 
             emit restorePasswordSuccess(replyValue);
@@ -192,6 +195,6 @@ void BackendlessUserAPI::logout() {
     );
 }
 
-BackendlessSignInUser BackendlessUserAPI::user() {
+BackendlessSignInUser* BackendlessUserAPI::user() {
     return userValue;
 }
