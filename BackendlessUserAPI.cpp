@@ -51,7 +51,7 @@ void BackendlessUserAPI::registerUser(BackendlessRegisterUserRepresentable& user
     );
 }
 
-void BackendlessUserAPI::signInUser(QString login, QString password, BackendlessSignInUserDecoder* decoder) {
+void BackendlessUserAPI::signInUser(QString login, QString password, std::shared_ptr<BackendlessSignInUserDecoder> decoder) {
     request(
         networkAccessManager,
         this,
@@ -62,7 +62,7 @@ void BackendlessUserAPI::signInUser(QString login, QString password, Backendless
         },
         BERequestMethod::post,
         {},
-        [&](auto replyValue){
+        [this, decoder](auto replyValue){
             qDebug() << replyValue;
 
             #ifdef BACKENDLESS_VARIANT_RESPONSE
@@ -82,7 +82,7 @@ void BackendlessUserAPI::signInUser(QString login, QString password, Backendless
             decoder->print();
             extractResult<BackendlessSignInUser>(
                 replyValue,
-                new CustomBackendlessSignInUserDecoder2(),
+                decoder,
                 [&](auto user) {
                     userValue = user;
                     saveTokenOnDisk();
