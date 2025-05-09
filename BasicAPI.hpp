@@ -79,7 +79,7 @@ public:
 template<typename T>
 void extractResult(
     QByteArray replyValue,
-    BackendlessSignInUserDecoder* decoder,
+    std::function<T*(QJsonObject)> const& decoder,
     std::function<void(T*)> const& onSuccess,
     std::function<void(BackendlessError)> const& onBEError,
     std::function<void(QJsonParseError)> const& onJSONError
@@ -100,8 +100,8 @@ void extractResult(
     switch (code) {
     case BackendlessErrorCode::noError:
         {
-        auto decoded = decoder->decode(
-            QJsonObject()
+        auto decoded = decoder(
+            jsonObject
         );
         onSuccess(
             (T*)(decoded)
