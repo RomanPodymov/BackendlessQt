@@ -20,8 +20,6 @@
 
 class AnyNetworkAccessManager;
 
-class BackendlessSignInUserDecoder;
-
 class BackendlessUserAPI: public QObject, public BasicAPI {
     Q_OBJECT
 

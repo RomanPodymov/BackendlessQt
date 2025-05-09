@@ -71,11 +71,6 @@ struct BackendlessError {
     ): code(_code), message(_message) { }
 };
 
-class BackendlessSignInUserDecoder {
-public:
-    virtual void* decode(QJsonObject json) = 0;
-};
-
 template<typename T>
 void extractResult(
     QByteArray replyValue,

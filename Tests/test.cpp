@@ -56,7 +56,7 @@ void BackendlessQtTests::testDisk() {
     userAPI.readTokenFromDisk();
 
     // Then
-    QCOMPARE(userAPI.userToken(), token);
+    QCOMPARE(userAPI.user()->userToken, token);
 }
 
 void BackendlessQtTests::cleanupTestCase() {
