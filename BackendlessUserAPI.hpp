@@ -61,6 +61,7 @@ signals:
 #endif
 
     void restorePasswordSuccess(QString);
+    void logoutSuccess();
 
 private:
     AnyNetworkAccessManager* networkAccessManager;

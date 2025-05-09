@@ -191,7 +191,7 @@ void BackendlessUserAPI::logout() {
             userValue = nullptr;
             removeTokenFromDisk();
 
-            emit restorePasswordSuccess(replyValue);
+            emit logoutSuccess();
         }
     );
 }
