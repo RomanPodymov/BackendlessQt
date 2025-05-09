@@ -51,7 +51,7 @@ void BackendlessUserAPI::registerUser(BackendlessRegisterUserRepresentable& user
     );
 }
 
-void BackendlessUserAPI::signInUser(QString login, QString password, std::shared_ptr<BackendlessSignInUserDecoder> decoder) {
+void BackendlessUserAPI::signInUser(QString login, QString password, BackendlessSignInUserDecoder* decoder) {
     request(
         networkAccessManager,
         this,
@@ -79,7 +79,6 @@ void BackendlessUserAPI::signInUser(QString login, QString password, std::shared
                 }
             );
             #else
-            decoder->print();
             extractResult<BackendlessSignInUser>(
                 replyValue,
                 decoder,

@@ -46,7 +46,7 @@ struct BackendlessSignInUser {
     ): name(jsonObject["name"].toString()),
        email(jsonObject["email"].toString()),
        userToken(jsonObject["user-token"].toString()) {
-        qDebug() << "HERE";
+
     }
 
     BackendlessSignInUser() {}

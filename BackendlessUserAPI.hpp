@@ -32,7 +32,7 @@ public:
     ~BackendlessUserAPI();
 
     void registerUser(BackendlessRegisterUserRepresentable&);
-    void signInUser(QString, QString, std::shared_ptr<BackendlessSignInUserDecoder>);
+    void signInUser(QString, QString, BackendlessSignInUserDecoder*);
     void validateUserToken();
     void restorePassword(QString);
     void logout();
