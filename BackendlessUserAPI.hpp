@@ -20,6 +20,8 @@
 
 class AnyNetworkAccessManager;
 
+class BackendlessSignInUserDecoder;
+
 class BackendlessUserAPI: public QObject, public BasicAPI {
     Q_OBJECT
 
@@ -30,7 +32,7 @@ public:
     ~BackendlessUserAPI();
 
     void registerUser(BackendlessRegisterUserRepresentable&);
-    void signInUser(QString, QString, std::function<BackendlessSignInUser*(QJsonObject)>);
+    void signInUser(QString, QString, BackendlessSignInUserDecoder*);
     void validateUserToken();
     void restorePassword(QString);
     void logout();

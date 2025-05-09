@@ -52,9 +52,7 @@ void BackendlessAPI::deleteItemFromTable(QString tableName, QString objectId) {
             qDebug() << replyValue;
             extractResult<DeletionResult>(
                 replyValue,
-                [&](auto bytes) {
-                    return new DeletionResult(bytes);
-                },
+                nullptr,
                 [&](auto result) {
                     emit deleteItemFromTableSuccess(result);
                 },

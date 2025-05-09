@@ -16,6 +16,12 @@
 #include <QFile>
 #include "BackendlessUserAPI.hpp"
 
+class CustomBackendlessSignInUserDecoder2: public BackendlessSignInUserDecoder {
+    void* decode(QJsonObject obj) override {
+        return new BackendlessSignInUser(obj);
+    }
+};
+
 BackendlessUserAPI::BackendlessUserAPI(AnyNetworkAccessManager* _networkAccessManager, QString _appId, QString _apiKey, QString _endpoint): QObject(),
     networkAccessManager(_networkAccessManager),
     appId(_appId),
@@ -45,8 +51,7 @@ void BackendlessUserAPI::registerUser(BackendlessRegisterUserRepresentable& user
     );
 }
 
-void BackendlessUserAPI::signInUser(QString login, QString password, std::function<BackendlessSignInUser*(QJsonObject)> decoder) {
-    auto closure = decoder;
+void BackendlessUserAPI::signInUser(QString login, QString password, BackendlessSignInUserDecoder* decoder) {
     request(
         networkAccessManager,
         this,
@@ -74,12 +79,10 @@ void BackendlessUserAPI::signInUser(QString login, QString password, std::functi
                 }
             );
             #else
+            decoder->print();
             extractResult<BackendlessSignInUser>(
                 replyValue,
-                /*[](auto bytes) {
-                    return new BackendlessSignInUser(bytes);
-                },*/
-                closure,
+                new CustomBackendlessSignInUserDecoder2(),
                 [&](auto user) {
                     userValue = user;
                     saveTokenOnDisk();
