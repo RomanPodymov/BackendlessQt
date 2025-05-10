@@ -46,18 +46,21 @@ void BackendlessUserAPI::registerUser(BackendlessRegisterUserRepresentable& user
 }
 
 void BackendlessUserAPI::signInUser(QString login, QString password, std::function<BackendlessSignInUser*(QJsonObject)> const& decoder) {
+    auto loginParam = QSharedPointer<StringPostParam>(new StringPostParam(login));
+    auto passwordParam = QSharedPointer<StringPostParam>(new StringPostParam(password));
     request(
         networkAccessManager,
         this,
         endpoint + appId + "/" + apiKey + "/users/login",
         {
-            {"login", new StringPostParam(login)},
-            {"password", new StringPostParam(password)}
+            {"login", loginParam.get()},
+            {"password", passwordParam.get()}
         },
         BERequestMethod::post,
         {},
-        [this, decoder](auto replyValue){
-            qDebug() << replyValue;
+        [this, decoder, &loginParam, &passwordParam](auto replyValue){
+            loginParam.clear();
+            passwordParam.clear();
 
             #ifdef BACKENDLESS_VARIANT_RESPONSE
             extractResult(
