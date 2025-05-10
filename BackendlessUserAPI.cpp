@@ -175,6 +175,9 @@ void BackendlessUserAPI::restorePassword(QString email) {
 }
 
 void BackendlessUserAPI::logout() {
+    if (!userValue) {
+        return;
+    }
     request(
         networkAccessManager,
         this,
