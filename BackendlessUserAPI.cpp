@@ -73,7 +73,7 @@ void BackendlessUserAPI::signInUser(QString login, QString password, std::functi
                 replyValue,
                 decoder,
                 [&](auto user) {
-                    // userValue = user;
+                    userValue = QSharedPointer<BackendlessSignInUser>(user);
                     saveTokenOnDisk();
                     emit signInUserSuccess(user);
                 },
@@ -98,7 +98,7 @@ void BackendlessUserAPI::readTokenFromDisk() {
     QFile file(tokenFilePath());
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream stream(&file);
-        // userValue = new BackendlessSignInUser();
+        userValue = QSharedPointer<BackendlessSignInUser>(new BackendlessSignInUser());
         stream >> userValue->userToken;
     }
     file.close();
@@ -186,7 +186,7 @@ void BackendlessUserAPI::logout() {
         [&](auto replyValue){
             qDebug() << replyValue;
 
-            userValue = nullptr;
+            userValue.reset();
             removeTokenFromDisk();
 
             emit logoutSuccess();
