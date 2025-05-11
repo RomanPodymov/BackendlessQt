@@ -33,7 +33,7 @@ public:
     void validateUserToken();
     void restorePassword(QString);
     void logout();
-    constexpr BackendlessSignInUser* user() {
+    BackendlessSignInUser* user() const {
         return userValue.get();
     }
 
