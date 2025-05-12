@@ -71,10 +71,15 @@ struct BackendlessError {
     ): code(_code), message(_message) { }
 };
 
+class SignInUserCoder {
+public:
+    virtual void* decode(QJsonObject obj) = 0;
+};
+
 template<typename T>
 void extractResult(
     QByteArray replyValue,
-    std::function<T*(QJsonObject)> const& decoder,
+    SignInUserCoder* decoder,
     std::function<void(T*)> const& onSuccess,
     std::function<void(BackendlessError)> const& onBEError,
     std::function<void(QJsonParseError)> const& onJSONError
@@ -95,7 +100,7 @@ void extractResult(
     switch (code) {
     case BackendlessErrorCode::noError:
         {
-        auto decoded = decoder(
+        auto decoded = decoder->decode(
             jsonObject
         );
         onSuccess(

@@ -41,7 +41,7 @@ void BackendlessUserAPI::registerUser(BackendlessRegisterUserRepresentable& user
     );
 }
 
-void BackendlessUserAPI::signInUser(QString login, QString password, std::function<BackendlessSignInUser*(QJsonObject)> const& decoder) {
+void BackendlessUserAPI::signInUser(QString login, QString password, SignInUserCoder* decoder) {
     auto loginParam = QSharedPointer<StringPostParam>(new StringPostParam(login));
     auto passwordParam = QSharedPointer<StringPostParam>(new StringPostParam(password));
     request(

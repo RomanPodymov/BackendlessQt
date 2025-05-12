@@ -20,6 +20,8 @@
 
 class AnyNetworkAccessManager;
 
+class SignInUserCoder;
+
 class BackendlessUserAPI: public QObject, public BasicAPI {
     Q_OBJECT
 
@@ -29,7 +31,7 @@ public:
     BackendlessUserAPI(AnyNetworkAccessManager*, QString _appId, QString _apiKey, QString _endpoint = "https://eu-api.backendless.com/");
 
     void registerUser(BackendlessRegisterUserRepresentable&);
-    void signInUser(QString, QString, std::function<BackendlessSignInUser*(QJsonObject)> const&);
+    void signInUser(QString, QString, SignInUserCoder*);
     void validateUserToken();
     void restorePassword(QString);
     void logout();
