@@ -107,7 +107,7 @@ void BackendlessUserAPI::saveTokenOnDisk(QSharedPointer<SignInUserCoder> coder, 
     QFile file(tokenFilePath());
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QTextStream stream(&file);
-        coder->write(stream, additionalValue);
+        coder->write(stream, userValue, additionalValue);
     }
     file.close();
 }

@@ -71,53 +71,6 @@ struct BackendlessError {
     ): code(_code), message(_message) { }
 };
 
-class SignInUserCoder {
-public:
-    virtual void* decode(QJsonObject obj) = 0;
-    virtual void write(QTextStream& stream, QString additionalToken) = 0;
-    virtual void* read(QTextStream& stream) = 0;
-};
-
-template<typename T>
-void extractResult(
-    QByteArray replyValue,
-    SignInUserCoder* decoder,
-    std::function<void(T*)> const& onSuccess,
-    std::function<void(BackendlessError)> const& onBEError,
-    std::function<void(QJsonParseError)> const& onJSONError
-) {
-    QJsonParseError jsonError;
-    auto jsonResponse = QJsonDocument::fromJson(replyValue, &jsonError);
-
-    switch (jsonError.error) {
-    case QJsonParseError::NoError:
-        break;
-    default:
-        onJSONError(jsonError);
-        return;
-    }
-
-    auto jsonObject = jsonResponse.object();
-    auto code = static_cast<BackendlessErrorCode>(jsonObject["code"].toInt());
-    switch (code) {
-    case BackendlessErrorCode::noError:
-        {
-        auto decoded = decoder->decode(
-            jsonObject
-        );
-        onSuccess(
-            (T*)(decoded)
-        );
-        }
-        break;
-    default:
-        onBEError(BackendlessError(
-            code,
-            jsonObject["message"].toString()
-        ));
-    }
-}
-
 enum class BERequestMethod {
     get,
     post,
