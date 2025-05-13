@@ -74,6 +74,8 @@ struct BackendlessError {
 class SignInUserCoder {
 public:
     virtual void* decode(QJsonObject obj) = 0;
+    virtual void write(QTextStream& stream, QString additionalToken) = 0;
+    virtual void* read(QTextStream& stream) = 0;
 };
 
 template<typename T>

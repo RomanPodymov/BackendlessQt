@@ -31,7 +31,7 @@ public:
     BackendlessUserAPI(AnyNetworkAccessManager*, QString _appId, QString _apiKey, QString _endpoint = "https://eu-api.backendless.com/");
 
     void registerUser(BackendlessRegisterUserRepresentable&);
-    void signInUser(QString, QString, SignInUserCoder*);
+    void signInUser(QString, QString, QSharedPointer<SignInUserCoder>);
     void validateUserToken();
     void restorePassword(QString);
     void logout();
@@ -41,8 +41,8 @@ public:
 
 private:
     QString tokenFilePath();
-    void readTokenFromDisk();
-    void saveTokenOnDisk(QString additionalValue = "");
+    void readTokenFromDisk(QSharedPointer<SignInUserCoder>);
+    void saveTokenOnDisk(QSharedPointer<SignInUserCoder>, QString additionalValue = "");
     void removeTokenFromDisk();
 
 signals:
