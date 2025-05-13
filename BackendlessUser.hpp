@@ -66,7 +66,7 @@ void extractResult(
     std::function<void(T*)> const& onSuccess,
     std::function<void(BackendlessError)> const& onBEError,
     std::function<void(QJsonParseError)> const& onJSONError
-    ) {
+) {
     QJsonParseError jsonError;
     auto jsonResponse = QJsonDocument::fromJson(replyValue, &jsonError);
 
@@ -85,17 +85,17 @@ void extractResult(
     {
         auto decoded = decoder->decode(
             jsonObject
-            );
+        );
         onSuccess(
-            (T*)(decoded)
-            );
+            (T*)decoded
+        );
     }
     break;
     default:
         onBEError(BackendlessError(
             code,
             jsonObject["message"].toString()
-            ));
+        ));
     }
 }
 
