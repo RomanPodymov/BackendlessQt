@@ -20,23 +20,23 @@
 
 class AnyNetworkAccessManager;
 
-class BackendlessSignInUserCoder: public SignInUserCoder {
+class BackendlessSignInUserCoder: public Coder {
     Codable* decode(QJsonObject obj) override {
         return new BackendlessSignInUser(obj);
     }
 
     void write(QTextStream& stream, QSharedPointer<Codable> codable, QSharedPointer<Codable> defaultValue) override {
         auto userValue = (BackendlessSignInUser*)(defaultValue.get() ? defaultValue.get() : codable.get());
-        stream << userValue->userToken;
-        stream << userValue->email;
-        stream << userValue->name;
+        stream << userValue->userToken << Qt::endl;
+        stream << userValue->email << Qt::endl;
+        stream << userValue->name << Qt::endl;
     }
 
     Codable* read(QTextStream& stream) override {
         auto result = new BackendlessSignInUser();
-        stream >> result->userToken;
-        stream >> result->email;
-        stream >> result->name;
+        stream >> result->name >> Qt::endl;
+        stream >> result->email >> Qt::endl;
+        stream >> result->userToken >> Qt::endl;
         return result;
     }
 };
@@ -47,7 +47,7 @@ class BackendlessUserAPI: public QObject, public BasicAPI {
     friend class BackendlessQtTests;
 
 public:
-    BackendlessUserAPI(AnyNetworkAccessManager*, QSharedPointer<SignInUserCoder> coder, QString _appId, QString _apiKey, QString _endpoint = "https://eu-api.backendless.com/");
+    BackendlessUserAPI(AnyNetworkAccessManager*, QSharedPointer<Coder> coder, QString _appId, QString _apiKey, QString _endpoint = "https://eu-api.backendless.com/");
 
     void registerUser(BackendlessRegisterUserRepresentable&);
     void signInUser(QString, QString);
@@ -87,7 +87,7 @@ signals:
 
 private:
     AnyNetworkAccessManager* networkAccessManager;
-    QSharedPointer<SignInUserCoder> coder;
+    QSharedPointer<Coder> coder;
     QString appId;
     QString apiKey;
     QString endpoint;

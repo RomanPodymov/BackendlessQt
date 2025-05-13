@@ -62,7 +62,7 @@ struct BackendlessSignInUser: public Codable {
     }
 };
 
-class SignInUserCoder {
+class Coder {
 public:
     virtual Codable* decode(QJsonObject) = 0;
     virtual void write(QTextStream&, QSharedPointer<Codable>, QSharedPointer<Codable>) = 0;
@@ -72,7 +72,7 @@ public:
 template<typename T>
 void extractResult(
     QByteArray replyValue,
-    SignInUserCoder* decoder,
+    Coder* decoder,
     std::function<void(T*)> const& onSuccess,
     std::function<void(BackendlessError)> const& onBEError,
     std::function<void(QJsonParseError)> const& onJSONError

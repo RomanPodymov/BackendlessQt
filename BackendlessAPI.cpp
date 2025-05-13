@@ -14,7 +14,7 @@
 #include <QJsonObject>
 #include "BackendlessAPI.hpp"
 
-class DeletionResultCoder: public SignInUserCoder {
+class DeletionResultCoder: public Coder {
     Codable* decode(QJsonObject obj) override {
         return new DeletionResult(obj);
     }
