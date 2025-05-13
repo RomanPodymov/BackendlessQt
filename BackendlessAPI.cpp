@@ -15,16 +15,16 @@
 #include "BackendlessAPI.hpp"
 
 class DeletionResultCoder: public SignInUserCoder {
-    BackendlessSignInUser* decode(QJsonObject obj) override {
-        return (BackendlessSignInUser*)(new DeletionResult(obj));
+    Codable* decode(QJsonObject obj) override {
+        return new DeletionResult(obj);
     }
 
-    void write(QTextStream&, QSharedPointer<BackendlessSignInUser>, QString) override {
+    void write(QTextStream&, QSharedPointer<Codable>, QString) override {
 
     }
 
-    BackendlessSignInUser* read(QTextStream&) override {
-
+    Codable* read(QTextStream&) override {
+        return nullptr;
     }
 };
 

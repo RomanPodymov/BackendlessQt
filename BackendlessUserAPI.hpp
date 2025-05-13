@@ -21,17 +21,18 @@
 class AnyNetworkAccessManager;
 
 class BackendlessSignInUserCoder: public SignInUserCoder {
-    BackendlessSignInUser* decode(QJsonObject obj) override {
+    Codable* decode(QJsonObject obj) override {
         return new BackendlessSignInUser(obj);
     }
 
-    void write(QTextStream& stream, QSharedPointer<BackendlessSignInUser> userValue, QString additionalValue) override {
+    void write(QTextStream& stream, QSharedPointer<Codable> codable, QString additionalValue) override {
+        auto userValue = (BackendlessSignInUser*)codable.get();
         stream << (additionalValue.isEmpty() ? userValue->userToken : additionalValue);
         stream << userValue->email;
         stream << userValue->name;
     }
 
-    BackendlessSignInUser* read(QTextStream& stream) override {
+    Codable* read(QTextStream& stream) override {
         auto result = new BackendlessSignInUser();
         stream >> result->userToken;
         stream >> result->email;

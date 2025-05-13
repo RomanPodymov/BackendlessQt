@@ -36,7 +36,11 @@ protected:
     StringPostParam* password;
 };
 
-struct BackendlessSignInUser {
+class Codable {
+
+};
+
+struct BackendlessSignInUser: public Codable {
     QString name;
     QString email;
     QString userToken;
@@ -52,11 +56,13 @@ struct BackendlessSignInUser {
     BackendlessSignInUser() {}
 };
 
+class Codable;
+
 class SignInUserCoder {
 public:
-    virtual BackendlessSignInUser* decode(QJsonObject) = 0;
-    virtual void write(QTextStream&, QSharedPointer<BackendlessSignInUser>, QString) = 0;
-    virtual BackendlessSignInUser* read(QTextStream&) = 0;
+    virtual Codable* decode(QJsonObject) = 0;
+    virtual void write(QTextStream&, QSharedPointer<Codable>, QString) = 0;
+    virtual Codable* read(QTextStream&) = 0;
 };
 
 template<typename T>
