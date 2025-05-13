@@ -50,13 +50,13 @@ void BackendlessQtTests::testDisk() {
     auto token = "Hello";
     auto name = "Name";
     auto email = "Email";
-    BackendlessUserAPI userAPI(nullptr, "", "", "");
     auto coder = QSharedPointer<BackendlessSignInUserCoder>(new BackendlessSignInUserCoder);
+    BackendlessUserAPI userAPI(nullptr, coder, "", "", "");
 
     // When
     userAPI.removeTokenFromDisk();
-    userAPI.saveTokenOnDisk(coder, token);
-    userAPI.readTokenFromDisk(coder);
+    userAPI.saveTokenOnDisk(token);
+    userAPI.readTokenFromDisk();
 
     // Then
     QCOMPARE(userAPI.user()->userToken, token);

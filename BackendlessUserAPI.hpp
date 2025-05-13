@@ -46,10 +46,10 @@ class BackendlessUserAPI: public QObject, public BasicAPI {
     friend class BackendlessQtTests;
 
 public:
-    BackendlessUserAPI(AnyNetworkAccessManager*, QString _appId, QString _apiKey, QString _endpoint = "https://eu-api.backendless.com/");
+    BackendlessUserAPI(AnyNetworkAccessManager*, QSharedPointer<SignInUserCoder> coder, QString _appId, QString _apiKey, QString _endpoint = "https://eu-api.backendless.com/");
 
     void registerUser(BackendlessRegisterUserRepresentable&);
-    void signInUser(QString, QString, QSharedPointer<SignInUserCoder>);
+    void signInUser(QString, QString);
     void validateUserToken();
     void restorePassword(QString);
     void logout();
@@ -59,8 +59,8 @@ public:
 
 private:
     QString tokenFilePath();
-    void readTokenFromDisk(QSharedPointer<SignInUserCoder>);
-    void saveTokenOnDisk(QSharedPointer<SignInUserCoder>, QString additionalValue = "");
+    void readTokenFromDisk();
+    void saveTokenOnDisk(QString additionalValue = "");
     void removeTokenFromDisk();
 
 signals:
@@ -86,6 +86,7 @@ signals:
 
 private:
     AnyNetworkAccessManager* networkAccessManager;
+    QSharedPointer<SignInUserCoder> coder;
     QString appId;
     QString apiKey;
     QString endpoint;

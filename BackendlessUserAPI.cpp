@@ -16,13 +16,14 @@
 #include <QFile>
 #include "BackendlessUserAPI.hpp"
 
-BackendlessUserAPI::BackendlessUserAPI(AnyNetworkAccessManager* _networkAccessManager, QString _appId, QString _apiKey, QString _endpoint): QObject(),
+BackendlessUserAPI::BackendlessUserAPI(AnyNetworkAccessManager* _networkAccessManager, QSharedPointer<SignInUserCoder> coder, QString _appId, QString _apiKey, QString _endpoint): QObject(),
     networkAccessManager(_networkAccessManager),
+    coder(coder),
     appId(_appId),
     apiKey(_apiKey),
     endpoint(_endpoint),
     userValue(nullptr) {
-    // readTokenFromDisk();
+    readTokenFromDisk();
 }
 
 void BackendlessUserAPI::registerUser(BackendlessRegisterUserRepresentable& user) {
@@ -41,7 +42,7 @@ void BackendlessUserAPI::registerUser(BackendlessRegisterUserRepresentable& user
     );
 }
 
-void BackendlessUserAPI::signInUser(QString login, QString password, QSharedPointer<SignInUserCoder> decoder) {
+void BackendlessUserAPI::signInUser(QString login, QString password) {
     auto loginParam = QSharedPointer<StringPostParam>(new StringPostParam(login));
     auto passwordParam = QSharedPointer<StringPostParam>(new StringPostParam(password));
     request(
@@ -54,7 +55,7 @@ void BackendlessUserAPI::signInUser(QString login, QString password, QSharedPoin
         },
         BERequestMethod::post,
         {},
-        [this, decoder](auto replyValue){
+        [this](auto replyValue){
             #ifdef BACKENDLESS_VARIANT_RESPONSE
             extractResult(
                 replyValue,
@@ -71,10 +72,10 @@ void BackendlessUserAPI::signInUser(QString login, QString password, QSharedPoin
             #else
             extractResult<BackendlessSignInUser>(
                 replyValue,
-                decoder.get(),
+                coder.get(),
                 [&](auto user) {
                     userValue = QSharedPointer<BackendlessSignInUser>(user);
-                    saveTokenOnDisk(decoder);
+                    saveTokenOnDisk();
                     emit signInUserSuccess(user);
                 },
                 [&](auto beError) {
@@ -94,7 +95,7 @@ QString BackendlessUserAPI::tokenFilePath() {
     return path + "/backendless_token.txt";
 }
 
-void BackendlessUserAPI::readTokenFromDisk(QSharedPointer<SignInUserCoder> coder) {
+void BackendlessUserAPI::readTokenFromDisk() {
     QFile file(tokenFilePath());
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream stream(&file);
@@ -103,7 +104,7 @@ void BackendlessUserAPI::readTokenFromDisk(QSharedPointer<SignInUserCoder> coder
     file.close();
 }
 
-void BackendlessUserAPI::saveTokenOnDisk(QSharedPointer<SignInUserCoder> coder, QString additionalValue) {
+void BackendlessUserAPI::saveTokenOnDisk(QString additionalValue) {
     QFile file(tokenFilePath());
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QTextStream stream(&file);

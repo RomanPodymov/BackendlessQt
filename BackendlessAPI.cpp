@@ -15,7 +15,7 @@
 #include "BackendlessAPI.hpp"
 
 BackendlessAPI::BackendlessAPI(AnyNetworkAccessManager* _networkAccessManager, QString _appId, QString _apiKey, QString _endpoint): QObject(),
-    userAPI(_networkAccessManager, _appId, _apiKey, _endpoint),
+    userAPI(_networkAccessManager, QSharedPointer<BackendlessSignInUserCoder>(new BackendlessSignInUserCoder()), _appId, _apiKey, _endpoint),
     networkAccessManager(_networkAccessManager),
     appId(_appId),
     apiKey(_apiKey),
