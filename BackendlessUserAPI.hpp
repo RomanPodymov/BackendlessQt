@@ -34,9 +34,9 @@ class BackendlessSignInUserCoder: public Coder {
 
     Codable* read(QTextStream& stream) override {
         auto result = new BackendlessSignInUser();
-        stream >> result->name >> Qt::endl;
-        stream >> result->email >> Qt::endl;
         stream >> result->userToken >> Qt::endl;
+        stream >> result->email >> Qt::endl;
+        stream >> result->name >> Qt::endl;
         return result;
     }
 };

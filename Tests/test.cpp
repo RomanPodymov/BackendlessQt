@@ -57,7 +57,7 @@ void BackendlessQtTests::testDisk() {
     userAPI.removeUserFromDisk();
     userAPI.saveUserOnDisk(
         QSharedPointer<BackendlessSignInUser>(
-            new BackendlessSignInUser(token, name, email)
+            new BackendlessSignInUser(name, email, token)
         )
     );
     userAPI.readUserFromDisk();
