@@ -15,7 +15,7 @@
 #include <QNetworkAccessManager>
 #include "BackendlessUserAPI.hpp"
 
-struct DeletionResult {
+struct DeletionResult: public Codable {
     long deletionTime;
 
     DeletionResult(QJsonObject jsonObject): deletionTime(jsonObject["deletionTime"].toInteger()) { }
