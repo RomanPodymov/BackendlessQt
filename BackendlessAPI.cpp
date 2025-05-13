@@ -19,7 +19,7 @@ class DeletionResultCoder: public SignInUserCoder {
         return new DeletionResult(obj);
     }
 
-    void write(QTextStream&, QSharedPointer<Codable>, QString) override {
+    void write(QTextStream&, QSharedPointer<Codable>, QSharedPointer<Codable>) override {
 
     }
 

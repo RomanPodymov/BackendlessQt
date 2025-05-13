@@ -25,9 +25,9 @@ class BackendlessSignInUserCoder: public SignInUserCoder {
         return new BackendlessSignInUser(obj);
     }
 
-    void write(QTextStream& stream, QSharedPointer<Codable> codable, QString additionalValue) override {
-        auto userValue = (BackendlessSignInUser*)codable.get();
-        stream << (additionalValue.isEmpty() ? userValue->userToken : additionalValue);
+    void write(QTextStream& stream, QSharedPointer<Codable> codable, QSharedPointer<Codable> defaultValue) override {
+        auto userValue = (BackendlessSignInUser*)(defaultValue.get() ? defaultValue.get() : codable.get());
+        stream << userValue->userToken;
         stream << userValue->email;
         stream << userValue->name;
     }
@@ -60,9 +60,9 @@ public:
 
 private:
     QString tokenFilePath();
-    void readTokenFromDisk();
-    void saveTokenOnDisk(QString additionalValue = "");
-    void removeTokenFromDisk();
+    void readUserFromDisk();
+    void saveUserOnDisk(QSharedPointer<BackendlessSignInUser> = QSharedPointer<BackendlessSignInUser>(nullptr));
+    void removeUserFromDisk();
 
 signals:
     void registerUserResult();

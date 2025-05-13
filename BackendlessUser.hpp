@@ -53,15 +53,19 @@ struct BackendlessSignInUser: public Codable {
 
     }
 
-    BackendlessSignInUser() {}
-};
+    BackendlessSignInUser(
+        QString _name = "",
+        QString _email = "",
+        QString _userToken = ""
+    ): name(_name), email(_email), userToken(_userToken) {
 
-class Codable;
+    }
+};
 
 class SignInUserCoder {
 public:
     virtual Codable* decode(QJsonObject) = 0;
-    virtual void write(QTextStream&, QSharedPointer<Codable>, QString) = 0;
+    virtual void write(QTextStream&, QSharedPointer<Codable>, QSharedPointer<Codable>) = 0;
     virtual Codable* read(QTextStream&) = 0;
 };
 
