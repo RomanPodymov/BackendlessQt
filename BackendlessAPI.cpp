@@ -28,8 +28,20 @@ class DeletionResultCoder: public Coder {
     }
 };
 
-BackendlessAPI::BackendlessAPI(AnyNetworkAccessManager* _networkAccessManager, QString _appId, QString _apiKey, QString _endpoint): QObject(),
-    userAPI(_networkAccessManager, QSharedPointer<BackendlessSignInUserCoder>(new BackendlessSignInUserCoder()), _appId, _apiKey, _endpoint),
+BackendlessAPI::BackendlessAPI(
+    AnyNetworkAccessManager* _networkAccessManager,
+    QSharedPointer<BackendlessSignInUserCoder> _coder,
+    QString _appId,
+    QString _apiKey,
+    QString _endpoint
+): QObject(),
+    userAPI(
+        _networkAccessManager,
+        _coder,
+        _appId,
+        _apiKey,
+        _endpoint
+    ),
     networkAccessManager(_networkAccessManager),
     appId(_appId),
     apiKey(_apiKey),
