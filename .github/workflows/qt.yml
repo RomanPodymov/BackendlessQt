@@ -30,7 +30,7 @@ jobs:
          
       - name: Parse test results
         id: getxml
-        uses: mavrosxristoforos/get-xml-info@2.0
+        uses: mavrosxristoforos/get-xml-info@2.1.0
         continue-on-error: true
         with:
           xml-file: 'test_report.xml'
