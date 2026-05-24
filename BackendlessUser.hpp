@@ -64,6 +64,7 @@ struct BackendlessSignInUser: public Codable {
 
 class Coder {
 public:
+    virtual ~Coder() = default;
     virtual Codable* decode(QJsonObject) = 0;
     virtual void write(QTextStream&, QSharedPointer<Codable>, QSharedPointer<Codable>) = 0;
     virtual Codable* read(QTextStream&) = 0;
