@@ -20,7 +20,7 @@
 
 class AnyNetworkAccessManager;
 
-class BackendlessSignInUserCoder: public Coder {
+class BackendlessSignInUserCoder final: public Coder {
     Codable* decode(QJsonObject obj) override {
         return new BackendlessSignInUser(obj);
     }
