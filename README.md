@@ -1,139 +1,59 @@
 # BackendlessQt
 
-BackendlessQt is a Qt-based client library for integrating applications with the Backendless backend platform. It provides convenient access to backend services such as user management, data storage, messaging, and cloud functionality from C++/Qt applications.
+Qt wrapper for [Backendless](https://backendless.com).
 
-Built with the power of the Qt Framework, the library is designed for cross-platform desktop and mobile development.
+## How to use it?
 
-## Features
-
-- Qt/C++ API for Backendless services
-- Cross-platform support
-  - Windows
-  - Linux
-  - macOS
-  - Android
-  - iOS
-- REST API integration
-- User registration and authentication
-- Data persistence and querying
-- Messaging and real-time communication
-- Asynchronous networking support using Qt
-- Easy integration into existing Qt projects
-
-## Requirements
-
-- Qt 5.x or Qt 6.x
-- C++17 compatible compiler
-- CMake or qmake
-- Internet connection for Backendless API access
-
-## Installation
-
-### Clone the repository
-
-```bash
-git clone https://github.com/RomanPodymov/BackendlessQt.git
-cd BackendlessQt
+Create a new API instance
+```
+BackendlessAPI api(API("YOUR_APP_ID", "YOUR_REST_API_KEY"));
 ```
 
-### Using CMake
-
-```bash
-mkdir build
-cd build
-cmake ..
-cmake --build .
+Register a new user
+```
+QObject::connect(&api.userAPI, &BackendlessUserAPI::registerUserResult, this, [](){
+    // User is registered
+});
+api.userAPI.registerUser(BackendlessRegisterUser("myemail@email.com", "Roman", "Password"));
 ```
 
-### Using qmake
-
-```bash
-qmake
-make
+Sign in
+```
+QObject::connect(&api.userAPI, &BackendlessUserAPI::signInUserSuccess, this, [](auto user){
+    // User is signed in
+});
+QObject::connect(&api.userAPI, &BackendlessUserAPI::signInUserErrorBackendless, this, [](auto error){
+    // Wrong credentials
+});
+api.userAPI.signInUser("myemail@email.com", "Password");
 ```
 
-## Project Structure
-
-```text
-BackendlessQt/
-├── src/          # Library source files
-├── include/      # Public headers
-├── examples/     # Example applications
-├── tests/        # Unit tests
-└── docs/         # Documentation
+Validate user token
+```
+QObject::connect(&api.userAPI, &BackendlessUserAPI::validateUserTokenSuccess, this, [](auto isValid){
+    // Is user token valid?
+});
+api.userAPI.validateUserToken();
 ```
 
-## Quick Start
-
-### Initialize Backendless
-
-```cpp
-#include <Backendless.h>
-
-int main()
-{
-    Backendless backendless;
-
-    backendless.initApp(
-        "YOUR-APPLICATION-ID",
-        "YOUR-API-KEY"
-    );
-
-    return 0;
-}
+Add a new item to a table
 ```
-
-### User Registration Example
-
-```cpp
-BackendlessUser user;
-
-user.setProperty("email", "user@example.com");
-user.setPassword("password");
-
-backendless.userService().registerUser(
-    user,
-    [](const BackendlessUser& registeredUser)
+QObject::connect(&api, &BackendlessAPI::itemAdded, this, [&](){
+    // Item is added
+});
+api.addItemToTable(
+    "TableName", 
     {
-        qDebug() << "User registered successfully";
-    },
-    [](const BackendlessFault& fault)
-    {
-        qDebug() << "Registration failed:" << fault.message();
+        {"propery", "value"}, 
+        {"anotherProperty", "value"}
     }
 );
 ```
 
-## Documentation
-
-- Backendless Platform: https://backendless.com/
-- Qt Documentation: https://doc.qt.io/
-
-## Examples
-
-Example applications can be found in the `examples/` directory. They demonstrate:
-
-- User authentication
-- Database operations
-- Real-time messaging
-- File upload/download
-- Cloud code integration
-
-## Contributing
-
-Contributions are welcome.
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push the branch
-5. Open a pull request
-
-## License
-
-This project is licensed under the MIT License unless stated otherwise in the repository.
-
-## Repository
-
-https://github.com/RomanPodymov/BackendlessQt
-
+Read table items
+```
+QObject::connect(&api, &BackendlessAPI::tableItemsLoaded, this, [&](auto response){
+    qDebug() << "Loaded " << response;
+});
+api.loadTableItems("TableName");
+```
