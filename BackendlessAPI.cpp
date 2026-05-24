@@ -104,7 +104,7 @@ void BackendlessAPI::deleteItemFromTable(QString tableName, QString objectId) {
                 [&](auto beError) {
                     emit deleteItemFromTableError(beError);
                 },
-                [&](auto jsonError) {
+                [&]([[maybe_unused]] auto jsonError) {
 
                 }
             );
